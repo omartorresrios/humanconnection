@@ -28,11 +28,9 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
     explorationTextEditing.text = widget.exploration.body;
     explorationTextFocusNode.addListener(explorationTextOnFocusChange);
     for (var i = 0; i < widget.exploration.sources.length; i++) {
-      explorationSourceFocusNodes.add(FocusNode());
-    }
-    for (var i = 0; i < explorationSourceFocusNodes.length; i++) {
-      explorationSourceFocusNodes[i].addListener(
-          () => explorationSourceOnFocusChange(explorationSourceFocusNodes[i]));
+      FocusNode focusNode = FocusNode();
+      focusNode.addListener(() => explorationSourceOnFocusChange(focusNode));
+      explorationSourceFocusNodes.add(focusNode);
     }
     setSources();
     setFocusNodes();

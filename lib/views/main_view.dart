@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:humanconnection/views/new_exploration.dart';
 import '../models/exploration.dart';
 import 'chats_view.dart';
 import 'explorations_view.dart';
@@ -27,7 +28,13 @@ class _MainViewState extends State<MainView> {
           children: views,
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const NewExplorationView()),
+            );
+          },
           foregroundColor: const Color.fromARGB(255, 255, 255, 255),
           backgroundColor: const Color.fromARGB(255, 53, 53, 53),
           shape: const CircleBorder(),

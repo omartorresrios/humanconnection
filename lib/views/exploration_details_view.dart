@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:humanconnection/views/chats_view.dart';
 import '../models/exploration.dart';
 import '../models/source.dart';
 import '../models/user.dart';
@@ -75,6 +76,16 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Detail view!"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ChatsView()),
+                );
+              },
+              icon: const Icon(Icons.chat)),
+        ],
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(16.0),

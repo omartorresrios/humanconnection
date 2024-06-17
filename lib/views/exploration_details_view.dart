@@ -85,22 +85,6 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
               icon: const Icon(Icons.chat)),
         ],
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16.0),
-        width: double.infinity,
-        child: ElevatedButton(
-            onPressed: () {
-              print("hahaha");
-            },
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              splashFactory: NoSplash.splashFactory,
-              shadowColor: Colors.transparent,
-            ),
-            child: const Text("Create")),
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -184,6 +168,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
 
   Widget sourceTextFields() {
     return ListView.builder(
+      padding: const EdgeInsets.all(0.0),
       physics: const NeverScrollableScrollPhysics(),
       // padding: const EdgeInsets.symmetric(horizontal: 15),
       shrinkWrap: true,
@@ -198,7 +183,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                   controller: sourceControllers[index],
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      fillColor: Color.fromARGB(255, 255, 255, 255),
+                      fillColor: Color.fromARGB(255, 172, 194, 91),
                       filled: true),
                   maxLines: 1,
                   onTap: () {},
@@ -211,6 +196,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
 
   Widget explorerList(List<User> explorers) {
     return ListView.separated(
+      padding: const EdgeInsets.all(0.0),
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: explorers.length,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:humanconnection/views/new_exploration.dart';
 import '../models/exploration.dart';
-import 'chats_view.dart';
+import 'connect_view.dart';
 import 'explorations_view.dart';
 
 class MainView extends StatefulWidget {
@@ -13,10 +13,10 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
-  int _currentIndex = 0;
+  int selectedIndex = 0;
   final views = [
     ExplorationsView(),
-    const ChatsView(),
+    const ConnectView(),
   ];
 
   @override
@@ -24,21 +24,24 @@ class _MainViewState extends State<MainView> {
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 206, 13, 13),
         body: IndexedStack(
-          index: _currentIndex,
+          index: selectedIndex,
           children: views,
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const NewExplorationView()),
-            );
-          },
-          foregroundColor: const Color.fromARGB(255, 255, 255, 255),
-          backgroundColor: const Color.fromARGB(255, 53, 53, 53),
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add),
+        floatingActionButton: Visibility(
+          visible: selectedIndex == 0,
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const NewExplorationView()),
+              );
+            },
+            foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+            backgroundColor: const Color.fromARGB(255, 53, 53, 53),
+            shape: const CircleBorder(),
+            child: const Icon(Icons.add),
+          ),
         ),
         bottomNavigationBar: Theme(
           data: ThemeData(
@@ -47,10 +50,10 @@ class _MainViewState extends State<MainView> {
           ),
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            currentIndex: _currentIndex,
+            currentIndex: selectedIndex,
             onTap: (int newIndex) {
               setState(() {
-                _currentIndex = newIndex;
+                selectedIndex = newIndex;
               });
             },
             items: const [
@@ -60,7 +63,7 @@ class _MainViewState extends State<MainView> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.chat),
-                label: "Chats",
+                label: "Connect",
               ),
             ],
           ),

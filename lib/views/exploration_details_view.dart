@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/exploration.dart';
 import '../models/source.dart';
+import '../models/user.dart';
 
 class ExplorationDetailsView extends StatefulWidget {
   final Exploration exploration;
@@ -94,67 +95,85 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isBodyFocused)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      setState(() =>
-                          isBodyFocused = explorationTextFocusNode.hasFocus);
-                      FocusScope.of(context).unfocus();
-                    },
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(Colors.red),
-                    ),
-                    child: const Text('Done'),
-                  ),
-                ),
-              TextField(
-                focusNode: explorationTextFocusNode,
-                controller: explorationTextEditing,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    fillColor: Colors.red,
-                    filled: true),
-                minLines: 1,
-                maxLines: 8,
-                onTap: () {},
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("Sources"),
-                  if (isSourceFocused)
-                    TextButton(
+          child: Container(
+            color: Colors.green,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (isBodyFocused)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
                       onPressed: () {
-                        setState(() {
-                          for (FocusNode focus in explorationSourceFocusNodes) {
-                            isSourceFocused = focus.hasFocus;
-                          }
-                          FocusScope.of(context).unfocus();
-                        });
+                        setState(() =>
+                            isBodyFocused = explorationTextFocusNode.hasFocus);
+                        FocusScope.of(context).unfocus();
                       },
                       style: const ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(Colors.red),
                       ),
                       child: const Text('Done'),
                     ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              sourceTextField()
-            ],
+                  ),
+                TextField(
+                  focusNode: explorationTextFocusNode,
+                  controller: explorationTextEditing,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      fillColor: Colors.red,
+                      filled: true),
+                  minLines: 1,
+                  maxLines: 8,
+                  onTap: () {},
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Sources"),
+                    if (isSourceFocused)
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            for (FocusNode focus
+                                in explorationSourceFocusNodes) {
+                              isSourceFocused = focus.hasFocus;
+                            }
+                            FocusScope.of(context).unfocus();
+                          });
+                        },
+                        style: const ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(Colors.red),
+                        ),
+                        child: const Text('Done'),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                sourceTextFields(),
+                if (widget.exploration.explorers.isNotEmpty)
+                  connectionsSection()
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget sourceTextField() {
+  Widget connectionsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 20),
+        const Text("Connections"),
+        const SizedBox(height: 20),
+        explorerList(widget.exploration.explorers),
+      ],
+    );
+  }
+
+  Widget sourceTextFields() {
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       // padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -178,6 +197,35 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
               )
             ]));
       },
+    );
+  }
+
+  Widget explorerList(List<User> explorers) {
+    return ListView.separated(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: explorers.length,
+      itemBuilder: (context, index) {
+        return Row(children: [
+          Container(
+            width: 20,
+            height: 20,
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 35, 96, 188),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.person,
+              size: 15,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(explorers[index].fullname)
+        ]);
+      },
+      separatorBuilder: (context, index) => const SizedBox(
+        height: 8,
+      ),
     );
   }
 }

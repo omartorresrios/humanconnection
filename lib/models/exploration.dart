@@ -1,4 +1,5 @@
 import 'source.dart';
+import 'user.dart';
 
 class Exploration {
   String body;

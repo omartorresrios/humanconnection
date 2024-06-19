@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:humanconnection/views/chats_view.dart';
+import 'package:humanconnection/views/explorer_details_view.dart';
 import '../models/exploration.dart';
 import '../models/source.dart';
 import '../models/user.dart';
@@ -201,22 +202,31 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
       shrinkWrap: true,
       itemCount: explorers.length,
       itemBuilder: (context, index) {
-        return Row(children: [
-          Container(
-            width: 20,
-            height: 20,
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 35, 96, 188),
-              shape: BoxShape.circle,
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ExplorerDetailsView(),
+                    fullscreenDialog: true));
+          },
+          child: Row(children: [
+            Container(
+              width: 20,
+              height: 20,
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 35, 96, 188),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.person,
+                size: 15,
+              ),
             ),
-            child: const Icon(
-              Icons.person,
-              size: 15,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(explorers[index].fullname)
-        ]);
+            const SizedBox(width: 8),
+            Text(explorers[index].fullname)
+          ]),
+        );
       },
       separatorBuilder: (context, index) => const SizedBox(
         height: 8,

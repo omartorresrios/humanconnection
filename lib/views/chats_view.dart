@@ -12,10 +12,10 @@ class _ChatsViewState extends State<ChatsView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Chat witht Anthon!"),
+          title: const Text("Chats"),
         ),
-        body: Center(
-          child: Text("Chat view"),
+        body: const Center(
+          child: Text("Here goes the all the chats"),
         ));
   }
 }

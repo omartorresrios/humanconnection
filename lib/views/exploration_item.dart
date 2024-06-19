@@ -33,9 +33,9 @@ class ExplorationItem extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
-                    SizedBox(height: exploration.explorers.isEmpty ? 0 : 8),
-                    if (exploration.explorers.isNotEmpty)
-                      ExplorerList(explorers: exploration.explorers.length),
+                    SizedBox(height: exploration.explorations.isEmpty ? 0 : 8),
+                    if (exploration.explorations.isNotEmpty)
+                      ExplorerList(explorers: exploration.explorations.length),
                   ],
                 ),
               ),

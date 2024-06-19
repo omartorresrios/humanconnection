@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-
+import '../models/exploration.dart';
 import 'chat_view.dart';
 
 class ExplorerDetailsView extends StatefulWidget {
-  const ExplorerDetailsView({super.key});
+  final Exploration exploration;
+
+  const ExplorerDetailsView({super.key, required this.exploration});
 
   @override
   State<ExplorerDetailsView> createState() => _ExplorerDetailsViewState();
@@ -13,11 +15,49 @@ class _ExplorerDetailsViewState extends State<ExplorerDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Sam"),
-      ),
-      body: const Center(
-        child: Text("Im exploring this..."),
+      appBar: AppBar(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Container(
+            width: double.infinity,
+            color: Color.fromARGB(255, 104, 68, 100),
+            child: Column(
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 35, 96, 188),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.person,
+                      size: 35,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                      "${widget.exploration.user.fullname} is exploring about ${widget.exploration.body}",
+                      textAlign: TextAlign.justify),
+                ),
+                const SizedBox(height: 20),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Sources"),
+                ),
+                const SizedBox(height: 8),
+                for (var source in widget.exploration.sources)
+                  Align(
+                      alignment: Alignment.centerLeft, child: Text(source.text))
+              ],
+            ),
+          ),
+        ),
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(16.0),

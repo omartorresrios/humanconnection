@@ -3,7 +3,6 @@ import 'package:humanconnection/views/chats_view.dart';
 import 'package:humanconnection/views/explorer_details_view.dart';
 import '../models/exploration.dart';
 import '../models/source.dart';
-import '../models/user.dart';
 
 class ExplorationDetailsView extends StatefulWidget {
   final Exploration exploration;
@@ -145,7 +144,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                 ),
                 const SizedBox(height: 20),
                 sourceTextFields(),
-                if (widget.exploration.explorers.isNotEmpty)
+                if (widget.exploration.explorations.isNotEmpty)
                   connectionsSection()
               ],
             ),
@@ -162,7 +161,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
         const SizedBox(height: 20),
         const Text("Connections"),
         const SizedBox(height: 20),
-        explorerList(widget.exploration.explorers),
+        explorerList(widget.exploration.explorations),
       ],
     );
   }
@@ -195,19 +194,20 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
     );
   }
 
-  Widget explorerList(List<User> explorers) {
+  Widget explorerList(List<Exploration> explorations) {
     return ListView.separated(
       padding: const EdgeInsets.all(0.0),
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: explorers.length,
+      itemCount: explorations.length,
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const ExplorerDetailsView(),
+                    builder: (context) =>
+                        ExplorerDetailsView(exploration: explorations[index]),
                     fullscreenDialog: true));
           },
           child: Row(children: [
@@ -224,7 +224,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
               ),
             ),
             const SizedBox(width: 8),
-            Text(explorers[index].fullname)
+            Text(explorations[index].user.fullname)
           ]),
         );
       },

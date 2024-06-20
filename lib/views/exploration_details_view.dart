@@ -167,30 +167,28 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
   }
 
   Widget sourceTextFields() {
-    return ListView.builder(
+    return ListView.separated(
       padding: const EdgeInsets.all(0.0),
       physics: const NeverScrollableScrollPhysics(),
       // padding: const EdgeInsets.symmetric(horizontal: 15),
       shrinkWrap: true,
       itemCount: widget.exploration.sources.length,
       itemBuilder: (context, index) {
-        return Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: Row(children: [
-              Expanded(
-                child: TextField(
-                  focusNode: explorationSourceFocusNodes[index],
-                  controller: sourceControllers[index],
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      fillColor: Color.fromARGB(255, 172, 194, 91),
-                      filled: true),
-                  maxLines: 1,
-                  onTap: () {},
-                ),
-              )
-            ]));
+        return Row(children: [
+          Expanded(
+            child: TextField(
+              focusNode: explorationSourceFocusNodes[index],
+              controller: sourceControllers[index],
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  fillColor: Color.fromARGB(255, 172, 194, 91),
+                  filled: true),
+              maxLines: 1,
+            ),
+          )
+        ]);
       },
+      separatorBuilder: (context, index) => const SizedBox(height: 8),
     );
   }
 
@@ -228,9 +226,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
           ]),
         );
       },
-      separatorBuilder: (context, index) => const SizedBox(
-        height: 8,
-      ),
+      separatorBuilder: (context, index) => const SizedBox(height: 8),
     );
   }
 }

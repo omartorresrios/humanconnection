@@ -93,29 +93,28 @@ class _NewExplorationViewState extends State<NewExplorationView> {
   }
 
   Widget sourceTextFields() {
-    return ListView.builder(
+    return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
       // padding: const EdgeInsets.symmetric(horizontal: 15),
       shrinkWrap: true,
       itemCount: 3,
       itemBuilder: (context, index) {
-        return Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: Row(children: [
-              Expanded(
-                child: TextField(
-                  // focusNode: explorationSourceFocusNodes[index],
-                  controller: sourceControllers[index],
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      fillColor: Color.fromARGB(255, 255, 255, 255),
-                      filled: true),
-                  maxLines: 1,
-                  onTap: () {},
-                ),
-              )
-            ]));
+        return Row(children: [
+          Expanded(
+            child: TextField(
+              // focusNode: explorationSourceFocusNodes[index],
+              controller: sourceControllers[index],
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  fillColor: Color.fromARGB(255, 255, 255, 255),
+                  filled: true),
+              maxLines: 1,
+              onTap: () {},
+            ),
+          )
+        ]);
       },
+      separatorBuilder: (context, index) => const SizedBox(height: 8),
     );
   }
 }

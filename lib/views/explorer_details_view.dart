@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/exploration.dart';
+import '../models/user.dart';
 import 'chat_view.dart';
+import 'explorer_profile.dart';
 
 class ExplorerDetailsView extends StatefulWidget {
   final Exploration exploration;
@@ -22,9 +24,9 @@ class _ExplorerDetailsViewState extends State<ExplorerDetailsView> {
           child: Container(
             width: double.infinity,
             color: Color.fromARGB(255, 104, 68, 100),
-            child: Column(
-              children: [
-                Center(
+            child: Column(children: [
+              GestureDetector(
+                child: Center(
                   child: Container(
                     width: 40,
                     height: 40,
@@ -38,24 +40,29 @@ class _ExplorerDetailsViewState extends State<ExplorerDetailsView> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                onTap: () {
+                  openExploreProfile(widget.exploration.user);
+                },
+              ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                    "${widget.exploration.user.fullname} is exploring about ${widget.exploration.body}",
+                    textAlign: TextAlign.justify),
+              ),
+              const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text("Sources"),
+              ),
+              const SizedBox(height: 8),
+              for (var source in widget.exploration.sources) ...[
                 Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                      "${widget.exploration.user.fullname} is exploring about ${widget.exploration.body}",
-                      textAlign: TextAlign.justify),
-                ),
-                const SizedBox(height: 20),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Sources"),
-                ),
+                    alignment: Alignment.centerLeft, child: Text(source.text)),
                 const SizedBox(height: 8),
-                for (var source in widget.exploration.sources)
-                  Align(
-                      alignment: Alignment.centerLeft, child: Text(source.text))
               ],
-            ),
+            ]),
           ),
         ),
       ),
@@ -77,5 +84,16 @@ class _ExplorerDetailsViewState extends State<ExplorerDetailsView> {
             child: const Text("Chat")),
       ),
     );
+  }
+
+  void openExploreProfile(User user) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return Column(mainAxisSize: MainAxisSize.min, children: [
+            ExplorerProfileView(user: user),
+          ]);
+        });
   }
 }

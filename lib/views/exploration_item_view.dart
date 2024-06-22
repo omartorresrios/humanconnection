@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../models/exploration.dart';
 
-class ExplorationItem extends StatelessWidget {
+class ExplorationItemView extends StatelessWidget {
   final Exploration exploration;
   final void Function() onTap;
 
-  const ExplorationItem(
+  const ExplorationItemView(
       {super.key, required this.exploration, required this.onTap});
 
   @override
@@ -28,7 +28,7 @@ class ExplorationItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(exploration.body,
+                    Text(exploration.text,
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(

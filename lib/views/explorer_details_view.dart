@@ -48,7 +48,7 @@ class _ExplorerDetailsViewState extends State<ExplorerDetailsView> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                    "${widget.exploration.user.fullname} is exploring about ${widget.exploration.body}",
+                    "${widget.exploration.user.fullname} is exploring about ${widget.exploration.text}",
                     textAlign: TextAlign.justify),
               ),
               const SizedBox(height: 20),

@@ -25,7 +25,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
   @override
   void initState() {
     super.initState();
-    explorationTextEditing.text = widget.exploration.body;
+    explorationTextEditing.text = widget.exploration.text;
     explorationTextFocusNode.addListener(explorationTextOnFocusChange);
     for (var i = 0; i < widget.exploration.sources.length; i++) {
       FocusNode focusNode = FocusNode();

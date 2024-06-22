@@ -33,9 +33,11 @@ class ExplorationItemView extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
-                    SizedBox(height: exploration.explorations.isEmpty ? 0 : 8),
-                    if (exploration.explorations.isNotEmpty)
-                      ExplorerList(explorers: exploration.explorations.length),
+                    SizedBox(
+                        height: exploration.sharedExplorations.isEmpty ? 0 : 8),
+                    if (exploration.sharedExplorations.isNotEmpty)
+                      ExplorerList(
+                          explorers: exploration.sharedExplorations.length),
                   ],
                 ),
               ),

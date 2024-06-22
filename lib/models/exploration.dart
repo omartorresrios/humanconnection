@@ -6,22 +6,29 @@ class Exploration {
   String text;
   List<Source> sources;
   User user;
-  List<Exploration> explorations;
+  List<Exploration> sharedExplorations;
 
   Exploration(
       {required this.text,
       required this.sources,
       required this.user,
-      required this.explorations});
+      required this.sharedExplorations});
 
   factory Exploration.fromJson(Map<String, dynamic> json) {
-    final list = List<String>.from(json['sources']);
-    final sources = list.map<Source>((text) => Source(text: text)).toList();
+    final parsedSources = List<String>.from(json['sources']);
+    final sources =
+        parsedSources.map<Source>((text) => Source(text: text)).toList();
+    final List<Exploration> sharedExplorations =
+        json['shared_explorations'] != null
+            ? (json['shared_explorations'] as List)
+                .map((i) => Exploration.fromJson(i))
+                .toList()
+            : [];
     return Exploration(
         text: json['text'],
         sources: sources,
         user: User.fromJson(json['user']),
-        explorations: json['explorations']);
+        sharedExplorations: sharedExplorations);
   }
 
   Map<String, dynamic> toJson() {
@@ -29,7 +36,7 @@ class Exploration {
       'text': text,
       'sources': sources,
       'user': user,
-      'explorations': explorations,
+      'shared_explorations': sharedExplorations.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -50,7 +57,7 @@ class Exploration {
               bio: "user.bio",
               city: "user.city",
               email: "user.email"),
-          explorations: [
+          sharedExplorations: [
             Exploration(
                 text:
                     "I want to explore what were the reasons the United States didn't engaged in the war since it was clear that the post war economic benefits outweighted the military costs.",
@@ -65,7 +72,7 @@ class Exploration {
                     bio: "user.bio",
                     city: "user.city",
                     email: "user.email"),
-                explorations: []),
+                sharedExplorations: []),
             Exploration(
                 text: "Another exploration",
                 sources: [Source(text: "source1"), Source(text: "source2")],
@@ -76,7 +83,7 @@ class Exploration {
                     bio: "user.bio",
                     city: "user.city",
                     email: "user.email"),
-                explorations: []),
+                sharedExplorations: []),
           ]),
       Exploration(
         text:
@@ -93,7 +100,7 @@ class Exploration {
             bio: "user.bio",
             city: "user.city",
             email: "user.email"),
-        explorations: [
+        sharedExplorations: [
           Exploration(
               text: "Another exploration",
               sources: [Source(text: "source1"), Source(text: "source2")],
@@ -104,7 +111,7 @@ class Exploration {
                   bio: "user.bio",
                   city: "user.city",
                   email: "user.email"),
-              explorations: []),
+              sharedExplorations: []),
           Exploration(
               text: "Another exploration",
               sources: [Source(text: "source1"), Source(text: "source2")],
@@ -115,7 +122,7 @@ class Exploration {
                   bio: "user.bio",
                   city: "user.city",
                   email: "user.email"),
-              explorations: []),
+              sharedExplorations: []),
         ],
       ),
       Exploration(
@@ -133,7 +140,7 @@ class Exploration {
             bio: "user.bio",
             city: "user.city",
             email: "user.email"),
-        explorations: [
+        sharedExplorations: [
           Exploration(
               text: "Another exploration",
               sources: [Source(text: "source1"), Source(text: "source2")],
@@ -144,7 +151,7 @@ class Exploration {
                   bio: "user.bio",
                   city: "user.city",
                   email: "user.email"),
-              explorations: []),
+              sharedExplorations: []),
         ],
       )
     ];

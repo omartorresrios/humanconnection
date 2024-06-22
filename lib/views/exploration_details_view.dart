@@ -144,7 +144,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                 ),
                 const SizedBox(height: 20),
                 sourceTextFields(),
-                if (widget.exploration.explorations.isNotEmpty)
+                if (widget.exploration.sharedExplorations.isNotEmpty)
                   connectionsSection()
               ],
             ),
@@ -161,7 +161,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
         const SizedBox(height: 20),
         const Text("Connections"),
         const SizedBox(height: 20),
-        explorerList(widget.exploration.explorations),
+        explorerList(widget.exploration.sharedExplorations),
       ],
     );
   }

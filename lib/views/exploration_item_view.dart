@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/exploration.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ExplorationItemView extends StatelessWidget {
   final Exploration exploration;
@@ -37,7 +38,10 @@ class ExplorationItemView extends StatelessWidget {
                         height: exploration.sharedExplorations.isEmpty ? 0 : 8),
                     if (exploration.sharedExplorations.isNotEmpty)
                       ExplorerList(
-                          explorers: exploration.sharedExplorations.length),
+                          explorerProfilePictureUrls: exploration
+                              .sharedExplorations
+                              .map((e) => e.user.profilePicture)
+                              .toList()),
                   ],
                 ),
               ),
@@ -68,28 +72,35 @@ class ExplorationItemView extends StatelessWidget {
 }
 
 class ExplorerList extends StatelessWidget {
-  final int explorers;
+  final List<String> explorerProfilePictureUrls;
 
-  const ExplorerList({super.key, required this.explorers});
+  const ExplorerList({super.key, required this.explorerProfilePictureUrls});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 30,
+    return Container(
+      height: 20,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: explorers,
+        itemCount: explorerProfilePictureUrls.length,
         itemBuilder: (context, index) {
-          return Container(
-            width: 20,
-            height: 20,
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 35, 96, 188),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.person,
-              size: 15,
+          return Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: CachedNetworkImage(
+              imageUrl: explorerProfilePictureUrls[index],
+              imageBuilder: (context, imageProvider) => Container(
+                width: 20.0,
+                height: 20.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Text("error: $error"),
             ),
           );
         },

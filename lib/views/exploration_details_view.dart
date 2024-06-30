@@ -95,19 +95,20 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
               children: [
                 if (isBodyFocused)
                   Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        setState(() =>
-                            isBodyFocused = explorationTextFocusNode.hasFocus);
-                        FocusScope.of(context).unfocus();
-                      },
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(Colors.red),
-                      ),
-                      child: const Text('Done'),
-                    ),
-                  ),
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        onPressed: () {
+                          setState(() => isBodyFocused =
+                              explorationTextFocusNode.hasFocus);
+                          FocusScope.of(context).unfocus();
+                        },
+                        child: const Text('Done'),
+                      )),
                 TextField(
                   focusNode: explorationTextFocusNode,
                   controller: explorationTextEditing,
@@ -126,6 +127,11 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                     const Text("Sources"),
                     if (isSourceFocused)
                       TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
                         onPressed: () {
                           setState(() {
                             for (FocusNode focus
@@ -135,11 +141,8 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                             FocusScope.of(context).unfocus();
                           });
                         },
-                        style: const ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(Colors.red),
-                        ),
                         child: const Text('Done'),
-                      ),
+                      )
                   ],
                 ),
                 const SizedBox(height: 20),

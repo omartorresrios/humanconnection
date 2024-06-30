@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class NewExplorationView extends StatefulWidget {
   const NewExplorationView({super.key});
@@ -51,7 +53,15 @@ class _NewExplorationViewState extends State<NewExplorationView> {
         padding: const EdgeInsets.all(16.0),
         width: double.infinity,
         child: ElevatedButton(
-            onPressed: isButtonActive ? () => print("ahaaaaaaa") : null,
+            onPressed: isButtonActive
+                ? () {
+                    createExploration(
+                        explorationTextEditing.text,
+                        sourceControllers
+                            .map((source) => source.text)
+                            .toList());
+                  }
+                : null,
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -117,4 +127,19 @@ class _NewExplorationViewState extends State<NewExplorationView> {
       separatorBuilder: (context, index) => const SizedBox(height: 8),
     );
   }
+}
+
+Future createExploration(String text, List<String> sources) async {
+  const url = 'http://127.0.0.1:3000/api/create_exploration';
+  Map data = {
+    'exploration': {'text': text, 'sources': sources}
+  };
+  await http.post(
+    Uri.parse(url),
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: jsonEncode(data),
+  );
 }

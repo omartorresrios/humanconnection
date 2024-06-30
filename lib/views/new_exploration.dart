@@ -26,8 +26,8 @@ class _NewExplorationViewState extends State<NewExplorationView> {
   }
 
   void textOnFocusChange() {
-    bool sourcesAreFilled =
-        sourceControllers.every((source) => source.text.isNotEmpty);
+    bool sourcesAreFilled = sourceControllers.any((source) =>
+        source.text.isNotEmpty); //.every((source) => source.text.isNotEmpty);
     setState(() => isButtonActive =
         (explorationTextEditing.text.isNotEmpty && sourcesAreFilled));
   }

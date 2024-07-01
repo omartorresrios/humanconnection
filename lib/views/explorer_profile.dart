@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ExplorerProfileView extends StatelessWidget {
   final User user;
@@ -15,15 +16,14 @@ class ExplorerProfileView extends StatelessWidget {
           child: Column(children: [
             Center(
               child: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 35, 96, 188),
+                width: 40.0,
+                height: 40.0,
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.person,
-                  size: 35,
+                  image: DecorationImage(
+                    image: CachedNetworkImageProvider(user.profilePicture),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -33,12 +33,10 @@ class ExplorerProfileView extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Center(
-              child: Text("Massachusets, MC"),
+              child: Text(user.city),
             ),
             const SizedBox(height: 20),
-            Align(
-                child: Text(
-                    "I'm working in the intersection of convolutional networks and philosphy of mind. Currently at the department of Engineering at MIT."))
+            Align(child: Text(user.bio))
           ]),
         ));
   }

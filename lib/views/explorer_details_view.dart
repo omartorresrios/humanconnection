@@ -3,6 +3,7 @@ import '../models/exploration.dart';
 import '../models/user.dart';
 import 'chat_view.dart';
 import 'explorer_profile.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ExplorerDetailsView extends StatefulWidget {
   final Exploration exploration;
@@ -28,20 +29,20 @@ class _ExplorerDetailsViewState extends State<ExplorerDetailsView> {
               GestureDetector(
                 child: Center(
                   child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 35, 96, 188),
+                    width: 40.0,
+                    height: 40.0,
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.person,
-                      size: 35,
+                      image: DecorationImage(
+                        image: CachedNetworkImageProvider(
+                            widget.exploration.user.profilePicture),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
                 onTap: () {
-                  openExploreProfile(widget.exploration.user);
+                  openExplorerProfile(widget.exploration.user);
                 },
               ),
               const SizedBox(height: 8),
@@ -86,7 +87,7 @@ class _ExplorerDetailsViewState extends State<ExplorerDetailsView> {
     );
   }
 
-  void openExploreProfile(User user) {
+  void openExplorerProfile(User user) {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,

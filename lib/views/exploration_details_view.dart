@@ -3,6 +3,7 @@ import 'package:humanconnection/views/chats_view.dart';
 import 'package:humanconnection/views/explorer_details_view.dart';
 import '../models/exploration.dart';
 import '../models/source.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ExplorationDetailsView extends StatefulWidget {
   final Exploration exploration;
@@ -213,15 +214,15 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
           },
           child: Row(children: [
             Container(
-              width: 20,
-              height: 20,
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 35, 96, 188),
+              width: 20.0,
+              height: 20.0,
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.person,
-                size: 15,
+                image: DecorationImage(
+                  image: CachedNetworkImageProvider(
+                      explorations[index].user.profilePicture),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             const SizedBox(width: 8),

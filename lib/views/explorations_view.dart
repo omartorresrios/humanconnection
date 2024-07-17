@@ -8,10 +8,10 @@ class ExplorationsView extends StatefulWidget {
   const ExplorationsView({super.key});
 
   @override
-  State<ExplorationsView> createState() => _ExplorationsViewState();
+  State<ExplorationsView> createState() => ExplorationsViewState();
 }
 
-class _ExplorationsViewState extends State<ExplorationsView> {
+class ExplorationsViewState extends State<ExplorationsView> {
   late Future<List<Exploration>> explorations;
 
   @override
@@ -20,12 +20,28 @@ class _ExplorationsViewState extends State<ExplorationsView> {
     explorations = fetchExplorations();
   }
 
+  Future<List<Exploration>> fetchExplorations() async {
+    const url = 'http://127.0.0.1:3000/api/all_explorations';
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return parseExplorations(response.body);
+    } else {
+      throw Exception('Failed to load explorations');
+    }
+  }
+
+  void reloadExplorations(Future<List<Exploration>> newExplorations) {
+    setState(() {
+      explorations = newExplorations;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 247, 247, 247),
         body: FutureBuilder<List<Exploration>>(
-            future: fetchExplorations(),
+            future: explorations,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
@@ -51,15 +67,5 @@ class _ExplorationsViewState extends State<ExplorationsView> {
                 return const CircularProgressIndicator();
               }
             }));
-  }
-}
-
-Future<List<Exploration>> fetchExplorations() async {
-  const url = 'http://127.0.0.1:3000/api/all_explorations';
-  final response = await http.get(Uri.parse(url));
-  if (response.statusCode == 200) {
-    return parseExplorations(response.body);
-  } else {
-    throw Exception('Failed to load explorations');
   }
 }

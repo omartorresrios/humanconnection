@@ -54,12 +54,11 @@ class _NewExplorationViewState extends State<NewExplorationView> {
         width: double.infinity,
         child: ElevatedButton(
             onPressed: isButtonActive
-                ? () {
-                    createExploration(
+                ? () async {
+                    await createExploration(
                         explorationTextEditing.text,
-                        sourceControllers
-                            .map((source) => source.text)
-                            .toList());
+                        sourceControllers.map((source) => source.text).toList(),
+                        context);
                   }
                 : null,
             style: ElevatedButton.styleFrom(
@@ -129,17 +128,29 @@ class _NewExplorationViewState extends State<NewExplorationView> {
   }
 }
 
-Future createExploration(String text, List<String> sources) async {
+Future<void> createExploration(
+    String text, List<String> sources, BuildContext context) async {
   const url = 'http://127.0.0.1:3000/api/create_exploration';
   Map data = {
     'exploration': {'text': text, 'sources': sources}
   };
-  await http.post(
-    Uri.parse(url),
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: jsonEncode(data),
-  );
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+    if (response.statusCode == 200) {
+      if (context.mounted) {
+        Navigator.pop(context, 'success');
+      }
+    } else {
+      print("Request failed with status: ${response.statusCode}");
+    }
+  } catch (e) {
+    print("Request error: $e");
+  }
 }

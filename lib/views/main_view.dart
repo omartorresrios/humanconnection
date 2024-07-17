@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:humanconnection/views/new_exploration.dart';
+import 'package:humanconnection/views/new_exploration_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../models/exploration.dart';
 import 'connect_view.dart';
 import 'explorations_view.dart';
@@ -15,7 +16,7 @@ class MainView extends StatefulWidget {
 class _MainViewState extends State<MainView> {
   int selectedIndex = 0;
   final views = [
-    ExplorationsView(),
+    const ExplorationsView(),
     const ConnectView(),
   ];
 
@@ -30,12 +31,23 @@ class _MainViewState extends State<MainView> {
         floatingActionButton: Visibility(
           visible: selectedIndex == 0,
           child: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const NewExplorationView()),
               );
+              if (result == 'success') {
+                Fluttertoast.showToast(
+                  msg: "Your exploration has been created!",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.TOP,
+                  timeInSecForIosWeb: 3,
+                  backgroundColor: Colors.black,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
+              }
             },
             foregroundColor: const Color.fromARGB(255, 255, 255, 255),
             backgroundColor: const Color.fromARGB(255, 53, 53, 53),

@@ -3,6 +3,8 @@ import 'package:humanconnection/views/chats_view.dart';
 import 'package:humanconnection/views/explorer_details_view.dart';
 import '../models/exploration.dart';
 import '../models/source.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ExplorationDetailsView extends StatefulWidget {
@@ -103,10 +105,16 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           setState(() => isBodyFocused =
                               explorationTextFocusNode.hasFocus);
                           FocusScope.of(context).unfocus();
+                          updateExploration(
+                              widget.exploration.id,
+                              explorationTextEditing.text,
+                              sourceControllers
+                                  .map((source) => source.text)
+                                  .toList());
                         },
                         child: const Text('Done'),
                       )),
@@ -133,7 +141,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           setState(() {
                             for (FocusNode focus
                                 in explorationSourceFocusNodes) {
@@ -141,6 +149,12 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                             }
                             FocusScope.of(context).unfocus();
                           });
+                          updateExploration(
+                              widget.exploration.id,
+                              explorationTextEditing.text,
+                              sourceControllers
+                                  .map((source) => source.text)
+                                  .toList());
                         },
                         child: const Text('Done'),
                       )
@@ -232,5 +246,31 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
       },
       separatorBuilder: (context, index) => const SizedBox(height: 8),
     );
+  }
+
+  Future<void> updateExploration(
+      String id, String text, List<String> sources) async {
+    String url = 'http://127.0.0.1:3000/api/update_exploration?id=$id';
+    final response = await http.post(Uri.parse(url));
+    Map data = {
+      'exploration': {'text': text, 'sources': sources}
+    };
+    try {
+      await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+      if (response.statusCode == 200) {
+        print("success!");
+      } else {
+        throw Exception('Failed to update exploration');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 }

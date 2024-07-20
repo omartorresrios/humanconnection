@@ -251,12 +251,11 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
   Future<void> updateExploration(
       String id, String text, List<String> sources) async {
     String url = 'http://127.0.0.1:3000/api/update_exploration?id=$id';
-    final response = await http.post(Uri.parse(url));
     Map data = {
       'exploration': {'text': text, 'sources': sources}
     };
     try {
-      await http.post(
+      final response = await http.put(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',

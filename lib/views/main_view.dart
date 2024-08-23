@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:humanconnection/views/new_exploration_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -50,6 +51,7 @@ class _MainViewState extends State<MainView> {
           visible: selectedIndex == 0,
           child: FloatingActionButton(
             onPressed: () async {
+              HapticFeedback.heavyImpact();
               final result = await Navigator.push(
                 context,
                 MaterialPageRoute(

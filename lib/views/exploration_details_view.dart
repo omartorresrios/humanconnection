@@ -101,6 +101,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         style: TextButton.styleFrom(
+                          overlayColor: Colors.transparent,
                           padding: EdgeInsets.zero,
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,

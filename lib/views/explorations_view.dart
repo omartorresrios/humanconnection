@@ -19,7 +19,7 @@ class ExplorationsViewState extends State<ExplorationsView> {
   @override
   void initState() {
     super.initState();
-    explorations = fetchExplorations();
+    reloadExplorations(fetchExplorations());
   }
 
   Future<List<Exploration>> fetchExplorations() async {
@@ -41,7 +41,7 @@ class ExplorationsViewState extends State<ExplorationsView> {
   void fetchNewExplorations(String result) async {
     if (result == 'success') {
       setState(() {
-        explorations = fetchExplorations();
+        reloadExplorations(fetchExplorations());
       });
       Fluttertoast.showToast(
         msg: "Your exploration has been created!",
@@ -91,7 +91,7 @@ class ExplorationsViewState extends State<ExplorationsView> {
                       )),
             ).then((_) {
               setState(() {
-                explorations = fetchExplorations();
+                reloadExplorations(fetchExplorations());
               });
             });
           },

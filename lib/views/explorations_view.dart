@@ -58,24 +58,22 @@ class ExplorationsViewState extends State<ExplorationsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 247, 247, 247),
-      body: FutureBuilder<List<Exploration>>(
-          future: explorations,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data!.length == 9) {
-                return createFirstExplorationWidget();
+        backgroundColor: Color.fromARGB(255, 247, 247, 247),
+        body: FutureBuilder<List<Exploration>>(
+            future: explorations,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data!.isEmpty) {
+                  return createFirstExplorationWidget();
+                } else {
+                  return explorationsWidget(snapshot);
+                }
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
               } else {
-                return explorationsWidget(snapshot);
+                return const CircularProgressIndicator();
               }
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
-            } else {
-              return const CircularProgressIndicator();
-            }
-          }
-        )
-      );
+            }));
   }
 
   Widget explorationsWidget(AsyncSnapshot snapshot) {
@@ -91,7 +89,11 @@ class ExplorationsViewState extends State<ExplorationsView> {
                   builder: (context) => ExplorationDetailsView(
                         exploration: snapshot.data![index],
                       )),
-            );
+            ).then((_) {
+              setState(() {
+                explorations = fetchExplorations();
+              });
+            });
           },
         );
       },
@@ -106,8 +108,8 @@ class ExplorationsViewState extends State<ExplorationsView> {
           const Text("Create your first exploration"),
           const SizedBox(height: 0),
           Container(
-            padding: EdgeInsets.zero, // removes padding
-            margin: EdgeInsets.zero, // removes margin
+            padding: EdgeInsets.zero,
+            margin: EdgeInsets.zero,
             child: ElevatedButton(
               onPressed: () async {
                 final result = await Navigator.push(
@@ -121,12 +123,12 @@ class ExplorationsViewState extends State<ExplorationsView> {
                 backgroundColor: Color.fromARGB(255, 53, 53, 53),
                 foregroundColor: Color.fromARGB(255, 255, 255, 255),
                 shape: const CircleBorder(),
-                fixedSize: Size(20, 20), // width and height
+                fixedSize: Size(20, 20),
                 padding: EdgeInsets.zero,
               ),
               child: const Icon(
                 Icons.add,
-                size: 15, // resize the icon
+                size: 15,
               ),
             ),
           )

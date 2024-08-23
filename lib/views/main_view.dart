@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:humanconnection/views/new_exploration_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import '../custom_views/navigation_bar_view.dart';
 import '../models/exploration.dart';
 import 'connect_view.dart';
 import 'explorations_view.dart';
@@ -18,7 +19,6 @@ class _MainViewState extends State<MainView> {
   final GlobalKey<ExplorationsViewState> explorationsKey =
       GlobalKey<ExplorationsViewState>();
   int selectedIndex = 0;
-  late Future<List<Exploration>> newExplorations;
 
   Future<List<Exploration>> fetchExplorations() async {
     const url = 'http://127.0.0.1:3000/api/all_explorations';
@@ -33,13 +33,18 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 206, 13, 13),
-        body: IndexedStack(
-          index: selectedIndex,
-          children: [
-            ExplorationsView(key: explorationsKey),
-            const ConnectView(),
-          ],
+        backgroundColor: Color.fromARGB(255, 247, 247, 247),
+        appBar: NavigationBarView(),
+        body: Padding(
+          padding: const EdgeInsets.only(
+              left: 8.0, top: 0.0, right: 8.0, bottom: 0.0),
+          child: IndexedStack(
+            index: selectedIndex,
+            children: [
+              ExplorationsView(key: explorationsKey),
+              const ConnectView(),
+            ],
+          ),
         ),
         floatingActionButton: Visibility(
           visible: selectedIndex == 0,
@@ -50,21 +55,9 @@ class _MainViewState extends State<MainView> {
                 MaterialPageRoute(
                     builder: (context) => const NewExplorationView()),
               );
-              setState(() {
-                newExplorations = fetchExplorations();
-              });
               if (result == 'success') {
-                Fluttertoast.showToast(
-                  msg: "Your exploration has been created!",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.TOP,
-                  timeInSecForIosWeb: 3,
-                  backgroundColor: Colors.black,
-                  textColor: Colors.white,
-                  fontSize: 16.0,
-                );
-                explorationsKey.currentState
-                    ?.reloadExplorations(newExplorations);
+                showToast();
+                fetchAndReloadExplorations();
               }
             },
             foregroundColor: const Color.fromARGB(255, 255, 255, 255),
@@ -98,5 +91,21 @@ class _MainViewState extends State<MainView> {
             ],
           ),
         ));
+  }
+
+  void fetchAndReloadExplorations() {
+    explorationsKey.currentState?.reloadExplorations(fetchExplorations());
+  }
+
+  void showToast() {
+    Fluttertoast.showToast(
+      msg: "Your exploration has been created!",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 3,
+      backgroundColor: Colors.black,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
 }

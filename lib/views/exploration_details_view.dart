@@ -264,12 +264,12 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
         body: jsonEncode(data),
       );
       if (response.statusCode == 200) {
-        print("success!");
+        print("exploration successfully updated!");
       } else {
         throw Exception('Failed to update exploration');
       }
     } catch (e) {
-      print('Error: $e');
+      print('some error: $e');
     }
   }
 }

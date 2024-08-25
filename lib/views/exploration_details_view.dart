@@ -77,15 +77,15 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            appBar(context),
-            const SizedBox(height: 20),
-            exploration(context),
-          ],
-        ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
+            child: appBar(context),
+          ),
+          const SizedBox(height: 20),
+          exploration(context),
+        ],
       ),
     ));
   }
@@ -93,14 +93,14 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
   Expanded exploration(BuildContext context) {
     return Expanded(
       child: SingleChildScrollView(
-        child: Container(
-          color: Colors.green,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isBodyFocused)
-                Align(
-                    alignment: Alignment.centerRight,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (isBodyFocused)
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
                     child: TextButton(
                       style: TextButton.styleFrom(
                         overlayColor: Colors.transparent,
@@ -120,20 +120,31 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                                 .toList());
                       },
                       child: const Text('Done'),
-                    )),
-              TextField(
+                    ),
+                  )),
+            Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: TextField(
                 focusNode: explorationTextFocusNode,
                 controller: explorationTextEditing,
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    fillColor: Colors.red,
-                    filled: true),
+                    hintText: "New exploration",
+                    border: InputBorder.none,
+                    fillColor: Colors.transparent),
                 minLines: 1,
                 maxLines: 8,
                 onTap: () {},
               ),
-              const SizedBox(height: 20),
-              Row(
+            ),
+            const SizedBox(height: 20),
+            const Divider(
+              height: 1,
+              color: Color.fromARGB(61, 78, 78, 78),
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text("Sources"),
@@ -162,12 +173,12 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                     )
                 ],
               ),
-              const SizedBox(height: 20),
-              sourceTextFields(),
-              if (widget.exploration.sharedExplorations.isNotEmpty)
-                connectionsSection()
-            ],
-          ),
+            ),
+            const SizedBox(height: 20),
+            sourceTextFields(),
+            if (widget.exploration.sharedExplorations.isNotEmpty)
+              connectionsSection()
+          ],
         ),
       ),
     );
@@ -216,19 +227,25 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
       shrinkWrap: true,
       itemCount: widget.exploration.sources.length,
       itemBuilder: (context, index) {
-        return Row(children: [
-          Expanded(
-            child: TextField(
-              focusNode: explorationSourceFocusNodes[index],
-              controller: sourceControllers[index],
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  fillColor: Color.fromARGB(255, 172, 194, 91),
-                  filled: true),
-              maxLines: 1,
-            ),
-          )
-        ]);
+        return Padding(
+          padding: const EdgeInsets.only(left: 16, right: 16),
+          child: Row(children: [
+            Expanded(
+              child: SizedBox(
+                height: 40,
+                child: TextField(
+                  focusNode: explorationSourceFocusNodes[index],
+                  controller: sourceControllers[index],
+                  decoration: const InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                      border: OutlineInputBorder()),
+                  maxLines: 1,
+                ),
+              ),
+            )
+          ]),
+        );
       },
       separatorBuilder: (context, index) => const SizedBox(height: 8),
     );

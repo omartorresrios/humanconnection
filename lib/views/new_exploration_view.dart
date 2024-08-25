@@ -132,9 +132,9 @@ class _NewExplorationViewState extends State<NewExplorationView> {
                 // focusNode: explorationSourceFocusNodes[index],
                 controller: sourceControllers[index],
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    fillColor: Color.fromARGB(255, 255, 255, 255),
-                    filled: true),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                    border: OutlineInputBorder()),
                 maxLines: 1,
                 onTap: () {},
               ),

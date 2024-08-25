@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class NewExplorationView extends StatefulWidget {
@@ -46,55 +47,71 @@ class _NewExplorationViewState extends State<NewExplorationView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("New exploration"),
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16.0),
-        width: double.infinity,
-        child: ElevatedButton(
-            onPressed: isButtonActive
-                ? () async {
-                    await createExploration(
-                        explorationTextEditing.text,
-                        sourceControllers.map((source) => source.text).toList(),
-                        context);
-                  }
-                : null,
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                        onTap: () {
+                          HapticFeedback.heavyImpact();
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancel")),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: isButtonActive
+                          ? () async {
+                              HapticFeedback.heavyImpact();
+                              Navigator.pop(context);
+                              await createExploration(
+                                  explorationTextEditing.text,
+                                  sourceControllers
+                                      .map((source) => source.text)
+                                      .toList(),
+                                  context);
+                            }
+                          : null,
+                      child: const Text('Create'),
+                    )
+                  ],
+                ),
               ),
-              splashFactory: NoSplash.splashFactory,
-              shadowColor: Colors.transparent,
-            ),
-            child: const Text("Create")),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            color: Colors.green,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: TextField(
                   focusNode: explorationTextFocusNode,
                   controller: explorationTextEditing,
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      fillColor: Colors.red,
-                      filled: true),
+                      hintText: "New exploration",
+                      border: InputBorder.none,
+                      fillColor: Colors.transparent),
                   minLines: 1,
                   maxLines: 8,
                   onTap: () {},
                 ),
-                const SizedBox(height: 20),
-                const Text("Sources"),
-                const SizedBox(height: 20),
-                sourceTextFields(),
-              ],
-            ),
+              ),
+              const SizedBox(height: 20),
+              const Divider(
+                height: 1,
+                color: Color.fromARGB(61, 78, 78, 78),
+              ),
+              const SizedBox(height: 20),
+              const Padding(
+                padding: EdgeInsets.only(left: 16, right: 16),
+                child: Text("Sources"),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: sourceTextFields(),
+              ),
+            ],
           ),
         ),
       ),
@@ -104,21 +121,23 @@ class _NewExplorationViewState extends State<NewExplorationView> {
   Widget sourceTextFields() {
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
-      // padding: const EdgeInsets.symmetric(horizontal: 15),
       shrinkWrap: true,
       itemCount: 3,
       itemBuilder: (context, index) {
         return Row(children: [
           Expanded(
-            child: TextField(
-              // focusNode: explorationSourceFocusNodes[index],
-              controller: sourceControllers[index],
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  fillColor: Color.fromARGB(255, 255, 255, 255),
-                  filled: true),
-              maxLines: 1,
-              onTap: () {},
+            child: SizedBox(
+              height: 40,
+              child: TextField(
+                // focusNode: explorationSourceFocusNodes[index],
+                controller: sourceControllers[index],
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    fillColor: Color.fromARGB(255, 255, 255, 255),
+                    filled: true),
+                maxLines: 1,
+                onTap: () {},
+              ),
             ),
           )
         ]);

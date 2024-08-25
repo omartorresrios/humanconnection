@@ -34,7 +34,7 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 247, 247, 247),
+        backgroundColor: const Color.fromARGB(255, 247, 247, 247),
         appBar: const NavigationBarView(),
         body: Padding(
           padding: const EdgeInsets.only(

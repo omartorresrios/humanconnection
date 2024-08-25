@@ -90,7 +90,6 @@ class ExplorationsViewState extends State<ExplorationsView> {
                         exploration: snapshot.data![index],
                       )),
             ).then((explorationUpdated) {
-              print("lets see: $explorationUpdated");
               if (explorationUpdated == true) {
                 setState(() {
                   reloadExplorations(fetchExplorations());

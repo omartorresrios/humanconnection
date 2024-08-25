@@ -288,7 +288,6 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
         body: jsonEncode(data),
       );
       if (response.statusCode == 200) {
-        print('yehhhhhhhhh');
         setState(() {
           explorationUpdated = true;
         });

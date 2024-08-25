@@ -131,10 +131,11 @@ class _NewExplorationViewState extends State<NewExplorationView> {
               child: TextField(
                 // focusNode: explorationSourceFocusNodes[index],
                 controller: sourceControllers[index],
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
+                    hintText: "Source ${index + 1}",
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                    border: OutlineInputBorder()),
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                    border: const OutlineInputBorder()),
                 maxLines: 1,
                 onTap: () {},
               ),

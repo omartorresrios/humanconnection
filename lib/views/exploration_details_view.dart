@@ -128,9 +128,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                 focusNode: explorationTextFocusNode,
                 controller: explorationTextEditing,
                 decoration: const InputDecoration(
-                    hintText: "New exploration",
-                    border: InputBorder.none,
-                    fillColor: Colors.transparent),
+                    border: InputBorder.none, fillColor: Colors.transparent),
                 minLines: 1,
                 maxLines: 8,
                 onTap: () {},

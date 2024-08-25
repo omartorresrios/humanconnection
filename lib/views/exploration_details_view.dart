@@ -24,6 +24,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
   String explorationBody = "";
   bool isBodyFocused = false;
   bool isSourceFocused = false;
+  bool explorationUpdated = false;
 
   @override
   void initState() {
@@ -75,101 +76,123 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Detail view!"),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ChatsView()),
-                );
-              },
-              icon: const Icon(Icons.chat)),
-        ],
+        body: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            appBar(context),
+            const SizedBox(height: 20),
+            exploration(context),
+          ],
+        ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            color: Colors.green,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (isBodyFocused)
-                  Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          overlayColor: Colors.transparent,
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        onPressed: () async {
-                          setState(() => isBodyFocused =
-                              explorationTextFocusNode.hasFocus);
+    ));
+  }
+
+  Expanded exploration(BuildContext context) {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Container(
+          color: Colors.green,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (isBodyFocused)
+                Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        overlayColor: Colors.transparent,
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () async {
+                        setState(() =>
+                            isBodyFocused = explorationTextFocusNode.hasFocus);
+                        FocusScope.of(context).unfocus();
+                        updateExploration(
+                            widget.exploration.id,
+                            explorationTextEditing.text,
+                            sourceControllers
+                                .map((source) => source.text)
+                                .toList());
+                      },
+                      child: const Text('Done'),
+                    )),
+              TextField(
+                focusNode: explorationTextFocusNode,
+                controller: explorationTextEditing,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    fillColor: Colors.red,
+                    filled: true),
+                minLines: 1,
+                maxLines: 8,
+                onTap: () {},
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Sources"),
+                  if (isSourceFocused)
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () async {
+                        setState(() {
+                          for (FocusNode focus in explorationSourceFocusNodes) {
+                            isSourceFocused = focus.hasFocus;
+                          }
                           FocusScope.of(context).unfocus();
-                          updateExploration(
-                              widget.exploration.id,
-                              explorationTextEditing.text,
-                              sourceControllers
-                                  .map((source) => source.text)
-                                  .toList());
-                        },
-                        child: const Text('Done'),
-                      )),
-                TextField(
-                  focusNode: explorationTextFocusNode,
-                  controller: explorationTextEditing,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      fillColor: Colors.red,
-                      filled: true),
-                  minLines: 1,
-                  maxLines: 8,
-                  onTap: () {},
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("Sources"),
-                    if (isSourceFocused)
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        onPressed: () async {
-                          setState(() {
-                            for (FocusNode focus
-                                in explorationSourceFocusNodes) {
-                              isSourceFocused = focus.hasFocus;
-                            }
-                            FocusScope.of(context).unfocus();
-                          });
-                          updateExploration(
-                              widget.exploration.id,
-                              explorationTextEditing.text,
-                              sourceControllers
-                                  .map((source) => source.text)
-                                  .toList());
-                        },
-                        child: const Text('Done'),
-                      )
-                  ],
-                ),
-                const SizedBox(height: 20),
-                sourceTextFields(),
-                if (widget.exploration.sharedExplorations.isNotEmpty)
-                  connectionsSection()
-              ],
-            ),
+                        });
+                        updateExploration(
+                            widget.exploration.id,
+                            explorationTextEditing.text,
+                            sourceControllers
+                                .map((source) => source.text)
+                                .toList());
+                      },
+                      child: const Text('Done'),
+                    )
+                ],
+              ),
+              const SizedBox(height: 20),
+              sourceTextFields(),
+              if (widget.exploration.sharedExplorations.isNotEmpty)
+                connectionsSection()
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  Row appBar(BuildContext context) {
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.pop(context, explorationUpdated);
+          },
+          child: const Icon(Icons.arrow_back_ios),
+        ),
+        const Spacer(),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ChatsView()),
+            );
+          },
+          child: const Icon(Icons.chat),
+        ),
+      ],
     );
   }
 
@@ -265,7 +288,10 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
         body: jsonEncode(data),
       );
       if (response.statusCode == 200) {
-        print("exploration successfully updated!");
+        print('yehhhhhhhhh');
+        setState(() {
+          explorationUpdated = true;
+        });
       } else {
         throw Exception('Failed to update exploration');
       }

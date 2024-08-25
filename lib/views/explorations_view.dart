@@ -89,10 +89,13 @@ class ExplorationsViewState extends State<ExplorationsView> {
                   builder: (context) => ExplorationDetailsView(
                         exploration: snapshot.data![index],
                       )),
-            ).then((_) {
-              setState(() {
-                reloadExplorations(fetchExplorations());
-              });
+            ).then((explorationUpdated) {
+              print("lets see: $explorationUpdated");
+              if (explorationUpdated == true) {
+                setState(() {
+                  reloadExplorations(fetchExplorations());
+                });
+              }
             });
           },
         );

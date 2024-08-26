@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:humanconnection/views/chats_view.dart';
 import 'package:humanconnection/views/explorer_details_view.dart';
 import '../models/exploration.dart';
 import '../models/source.dart';
@@ -170,7 +169,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                     },
                     child: const Text('Save'),
                   )
-                : SizedBox.shrink(); // Hide the button if not visible
+                : const SizedBox.shrink(); // Hide the button if not visible
           },
         ),
       ],

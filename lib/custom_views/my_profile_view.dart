@@ -1,23 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../models/user.dart';
 
 class MyProfileView extends StatefulWidget {
-  const MyProfileView({super.key});
+  final User user;
+
+  const MyProfileView({super.key, required this.user});
 
   @override
   State<MyProfileView> createState() => _MyProfileViewState();
 }
 
 class _MyProfileViewState extends State<MyProfileView> {
-  final fullnameTextEditing = TextEditingController();
-  final cityTextEditing = TextEditingController();
-  final bioTextEditing = TextEditingController();
+  final fullnameTextController = TextEditingController();
+  final cityTextController = TextEditingController();
+  final bioTextController = TextEditingController();
+  final ValueNotifier<bool> hasProfileChanged = ValueNotifier<bool>(false);
+  String fullnameText = "";
+  String cityText = "";
+  String bioText = "";
+
+  @override
+  void initState() {
+    super.initState();
+    setTexts();
+    setupListeners();
+  }
+
+  void setTexts() {
+    fullnameTextController.text = widget.user.fullname;
+    cityTextController.text = widget.user.city;
+    bioTextController.text = widget.user.bio;
+    fullnameText = widget.user.fullname;
+    cityText = widget.user.city;
+    bioText = widget.user.bio;
+  }
+
+  void setupListeners() {
+    fullnameTextController.addListener(checkForChanges);
+    cityTextController.addListener(checkForChanges);
+    bioTextController.addListener(checkForChanges);
+  }
+
+  void checkForChanges() {
+    if (fullnameTextController.text != fullnameText ||
+        cityTextController.text != cityText ||
+        bioTextController.text != bioText) {
+      hasProfileChanged.value = true;
+    } else {
+      hasProfileChanged.value = false;
+    }
+  }
 
   @override
   void dispose() {
-    fullnameTextEditing.dispose();
-    cityTextEditing.dispose();
-    bioTextEditing.dispose();
+    fullnameTextController.dispose();
+    cityTextController.dispose();
+    bioTextController.dispose();
     super.dispose();
   }
 
@@ -41,12 +80,25 @@ class _MyProfileViewState extends State<MyProfileView> {
                   child: const Text('Cancel'),
                 ),
                 const Spacer(),
-                TextButton(
-                  style: TextButton.styleFrom(overlayColor: Colors.transparent),
-                  onPressed: () {
-                    HapticFeedback.heavyImpact();
+                ValueListenableBuilder<bool>(
+                  valueListenable: hasProfileChanged,
+                  builder: (context, isVisible, child) {
+                    return isVisible
+                        ? TextButton(
+                            style: TextButton.styleFrom(
+                              overlayColor: Colors.transparent,
+                              padding: EdgeInsets.zero,
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            onPressed: () {
+                              HapticFeedback.heavyImpact();
+                            },
+                            child: const Text('Save'),
+                          )
+                        : const SizedBox
+                            .shrink(); // Hide the button if not visible
                   },
-                  child: const Text('Save'),
                 ),
               ],
             ),
@@ -58,7 +110,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
             const SizedBox(height: 20),
             TextField(
-              controller: fullnameTextEditing,
+              controller: fullnameTextController,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   fillColor: Colors.transparent,
@@ -69,7 +121,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
             const SizedBox(height: 20),
             TextField(
-              controller: cityTextEditing,
+              controller: cityTextController,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   fillColor: Colors.transparent,
@@ -80,7 +132,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
             const SizedBox(height: 20),
             TextField(
-              controller: bioTextEditing,
+              controller: bioTextController,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   fillColor: Colors.transparent,

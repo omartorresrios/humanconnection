@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:humanconnection/custom_views/my_profile_view.dart';
+import '../models/user.dart';
 
 class NavigationBarView extends StatelessWidget implements PreferredSizeWidget {
   const NavigationBarView({super.key});
@@ -26,8 +27,15 @@ class NavigationBarView extends StatelessWidget implements PreferredSizeWidget {
                     padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom,
                     ),
-                    child: const IntrinsicHeight(
-                      child: MyProfileView(),
+                    child: IntrinsicHeight(
+                      child: MyProfileView(
+                          user: User(
+                              id: "1",
+                              fullname: "omar torres",
+                              profilePicture: "some",
+                              bio: "hello there",
+                              city: "Barcelona",
+                              email: "torresomar44@gmail.com")),
                     ),
                   );
                 },

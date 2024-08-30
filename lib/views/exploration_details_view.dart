@@ -177,14 +177,17 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
   }
 
   Widget connectionsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 20),
-        const Text("Connections"),
-        const SizedBox(height: 20),
-        explorerList(widget.exploration.sharedExplorations),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 20),
+          const Text("Connections"),
+          const SizedBox(height: 20),
+          explorerList(widget.exploration.sharedExplorations),
+        ],
+      ),
     );
   }
 
@@ -220,7 +223,6 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
 
   Widget explorerList(List<Exploration> explorations) {
     return ListView.separated(
-      padding: const EdgeInsets.all(0.0),
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: explorations.length,
@@ -236,8 +238,8 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
           },
           child: Row(children: [
             Container(
-              width: 20.0,
-              height: 20.0,
+              width: 30,
+              height: 30,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/exploration.dart';
 import '../models/user.dart';
 import 'chat_view.dart';
 import 'explorer_profile.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class ExplorerDetailsView extends StatefulWidget {
   final Exploration exploration;
@@ -18,73 +19,116 @@ class _ExplorerDetailsViewState extends State<ExplorerDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Container(
-            width: double.infinity,
-            color: Color.fromARGB(255, 104, 68, 100),
-            child: Column(children: [
-              GestureDetector(
-                child: Center(
-                  child: Container(
-                    width: 40.0,
-                    height: 40.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: CachedNetworkImageProvider(
-                            widget.exploration.user.profilePicture),
-                        fit: BoxFit.cover,
-                      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                        onTap: () {
+                          HapticFeedback.heavyImpact();
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancel")),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        HapticFeedback.heavyImpact();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ChatView()));
+                      },
+                      child: const Text('Chat'),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage:
+                        NetworkImage(widget.exploration.user.profilePicture),
+                  ),
+                  onTap: () {
+                    HapticFeedback.heavyImpact();
+                    openExplorerProfile(widget.exploration.user);
+                  },
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color.fromARGB(61, 78, 78, 78),
+                      width: 1,
                     ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                        "${widget.exploration.user.fullname} is exploring about ${widget.exploration.text}",
+                        textAlign: TextAlign.justify),
                   ),
                 ),
-                onTap: () {
-                  openExplorerProfile(widget.exploration.user);
-                },
-              ),
-              const SizedBox(height: 8),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                    "${widget.exploration.user.fullname} is exploring about ${widget.exploration.text}",
-                    textAlign: TextAlign.justify),
-              ),
-              const SizedBox(height: 20),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Sources"),
-              ),
-              const SizedBox(height: 8),
-              for (var source in widget.exploration.sources) ...[
-                Align(
-                    alignment: Alignment.centerLeft, child: Text(source.text)),
+                const SizedBox(height: 20),
+                const Text("Sources"),
                 const SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(16),
+                  alignment: Alignment.centerLeft,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color.fromARGB(61, 78, 78, 78),
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: [
+                      for (int i = 0;
+                          i < widget.exploration.sources.length;
+                          i++) ...[
+                        GestureDetector(
+                            onTap: () async {
+                              HapticFeedback.heavyImpact();
+                              await openSource(
+                                  widget.exploration.sources[i].text);
+                            },
+                            child: Text(
+                                "${i + 1}) ${widget.exploration.sources[i].text}",
+                                style: const TextStyle(color: Colors.blue))),
+                        if (i != widget.exploration.sources.length - 1)
+                          const SizedBox(height: 12),
+                      ],
+                    ],
+                  ),
+                )
               ],
-            ]),
+            ),
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16.0),
-        width: double.infinity,
-        child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ChatView()));
-            },
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              splashFactory: NoSplash.splashFactory,
-              shadowColor: Colors.transparent,
-            ),
-            child: const Text("Chat")),
-      ),
     );
+  }
+
+  Future<void> openSource(String url) async {
+    try {
+      var uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        throw 'Could not launch $url';
+      }
+    } catch (e) {
+      print("There was an error when opening a link: $e");
+    }
   }
 
   void openExplorerProfile(User user) {

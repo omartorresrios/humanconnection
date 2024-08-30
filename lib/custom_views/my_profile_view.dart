@@ -112,35 +112,41 @@ class _MyProfileViewState extends State<MyProfileView> {
             TextField(
               controller: fullnameTextController,
               decoration: const InputDecoration(
+                  hintText: "Full Name",
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   border: OutlineInputBorder(),
                   fillColor: Colors.transparent,
                   filled: true),
               minLines: 1,
               maxLines: 1,
-              onTap: () {},
             ),
             const SizedBox(height: 20),
             TextField(
               controller: cityTextController,
               decoration: const InputDecoration(
+                  hintText: "City",
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   border: OutlineInputBorder(),
                   fillColor: Colors.transparent,
                   filled: true),
               minLines: 1,
               maxLines: 1,
-              onTap: () {},
             ),
             const SizedBox(height: 20),
             TextField(
               controller: bioTextController,
               decoration: const InputDecoration(
+                  hintText: "Bio. Put something about you.",
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   border: OutlineInputBorder(),
                   fillColor: Colors.transparent,
                   filled: true),
               minLines: 1,
-              maxLines: 1,
-              onTap: () {},
-            ),
+              maxLines: 5,
+            )
           ],
         ),
       ),

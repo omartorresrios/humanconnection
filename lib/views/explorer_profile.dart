@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/user.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class ExplorerProfileView extends StatelessWidget {
   final User user;
@@ -98,6 +97,5 @@ class ExplorerProfileView extends StatelessWidget {
         ),
       ),
     );
-    ;
   }
 }

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "945883542325",
+    "project_id": "humanconnection-30ad9",
+    "storage_bucket": "humanconnection-30ad9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945883542325:android:0758136143ded8a742127c",
+        "android_client_info": {
+          "package_name": "com.example.humanconnection"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "945883542325-o9bmjq59huak4lt2lbidb2rab2mlap83.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkPIE7TJdi0wD-4W4QD9Eh98v5ANHjkHk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "945883542325-o9bmjq59huak4lt2lbidb2rab2mlap83.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "945883542325-53i85curmccmsmo6no6d3gpefufcpp22.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.humanconnection"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

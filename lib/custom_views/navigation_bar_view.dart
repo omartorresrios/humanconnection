@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:humanconnection/auth_manager.dart';
 import 'package:humanconnection/custom_views/my_profile_view.dart';
 import '../models/user.dart';
 
 class NavigationBarView extends StatelessWidget implements PreferredSizeWidget {
   const NavigationBarView({super.key});
+
+  Future signOut() async {
+    AuthManager().signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +21,7 @@ class NavigationBarView extends StatelessWidget implements PreferredSizeWidget {
         title: const Text("Explorations"),
         leading: Image.asset('lib/assets/network.png'),
         actions: [
+          IconButton(onPressed: signOut, icon: const Icon(Icons.logout)),
           GestureDetector(
             onTap: () {
               HapticFeedback.heavyImpact();

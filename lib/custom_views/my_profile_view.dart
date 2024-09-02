@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/user.dart';
@@ -72,7 +73,9 @@ class _MyProfileViewState extends State<MyProfileView> {
             Row(
               children: [
                 TextButton(
-                  style: TextButton.styleFrom(overlayColor: Colors.transparent),
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      overlayColor: Colors.transparent),
                   onPressed: () {
                     HapticFeedback.heavyImpact();
                     Navigator.pop(context);
@@ -103,10 +106,16 @@ class _MyProfileViewState extends State<MyProfileView> {
               ],
             ),
             const SizedBox(height: 20),
-            const CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(
-                  "https://randomuser.me/api/portraits/thumb/men/75.jpg"),
+            Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: CachedNetworkImageProvider(widget.user.picture),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             TextField(

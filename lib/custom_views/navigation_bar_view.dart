@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:humanconnection/auth_manager.dart';
@@ -46,8 +47,21 @@ class NavigationBarView extends StatelessWidget implements PreferredSizeWidget {
                 },
               );
             },
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(user.picture),
+            child: CachedNetworkImage(
+              imageUrl: user.picture,
+              imageBuilder: (context, imageProvider) => Container(
+                width: 40.0,
+                height: 40.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Text("error: $error"),
             ),
           ),
         ],

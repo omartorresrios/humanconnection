@@ -9,8 +9,10 @@ import 'connect_view.dart';
 import 'explorations_view.dart';
 
 class MainView extends StatefulWidget {
-  MainView({super.key});
   final explorationList = Exploration.explorationList();
+  final String userPictureUrl;
+
+  MainView({super.key, required this.userPictureUrl});
 
   @override
   State<MainView> createState() => _MainViewState();
@@ -35,7 +37,7 @@ class _MainViewState extends State<MainView> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 247, 247, 247),
-        appBar: const NavigationBarView(),
+        appBar: NavigationBarView(userPictureUrl: widget.userPictureUrl),
         body: Padding(
           padding: const EdgeInsets.only(
               left: 8.0, top: 0.0, right: 8.0, bottom: 0.0),

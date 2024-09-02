@@ -14,7 +14,7 @@ class RootView extends StatelessWidget {
         stream: AuthManager.userIsLoggedIn,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return MainView();
+            return MainView(userPictureUrl: snapshot.data!.picture);
           } else {
             return const LoginView();
           }

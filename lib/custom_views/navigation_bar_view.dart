@@ -5,7 +5,8 @@ import 'package:humanconnection/custom_views/my_profile_view.dart';
 import '../models/user.dart';
 
 class NavigationBarView extends StatelessWidget implements PreferredSizeWidget {
-  const NavigationBarView({super.key});
+  final String userPictureUrl;
+  const NavigationBarView({super.key, required this.userPictureUrl});
 
   Future signOut() async {
     AuthManager().signOut();
@@ -47,9 +48,8 @@ class NavigationBarView extends StatelessWidget implements PreferredSizeWidget {
                 },
               );
             },
-            child: const CircleAvatar(
-              backgroundImage: NetworkImage(
-                  "https://randomuser.me/api/portraits/thumb/men/75.jpg"),
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(userPictureUrl),
             ),
           ),
         ],

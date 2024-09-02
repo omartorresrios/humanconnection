@@ -30,7 +30,6 @@ class AuthManager {
         headers: {'AUTHORIZATION_TOKEN': token},
       );
       if (response.statusCode == 200) {
-        print("response is: ${response.body}");
         var currentUser = parseCurrentUser(response.body);
         userIsLoggedInController.add(currentUser);
       } else {

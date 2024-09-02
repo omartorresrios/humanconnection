@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:humanconnection/auth_manager.dart';
+import 'package:humanconnection/models/current_user.dart';
 import 'package:humanconnection/views/login_view.dart';
 import 'package:humanconnection/views/main_view.dart';
 
@@ -9,8 +10,8 @@ class RootView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
+      body: StreamBuilder<CurrentUserInfo?>(
+        stream: AuthManager.userIsLoggedIn,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return MainView();

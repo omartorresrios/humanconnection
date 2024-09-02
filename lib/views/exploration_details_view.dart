@@ -260,7 +260,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
 
   Future<void> updateExploration(
       String id, String text, List<String> sources) async {
-    String url = 'http://127.0.0.1:3000/api/update_exploration?id=$id';
+    String url = 'http://192.168.1.86:3000/api/update_exploration?id=$id';
     Map data = {
       'exploration': {'text': text, 'sources': sources}
     };

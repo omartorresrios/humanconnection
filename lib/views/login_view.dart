@@ -9,18 +9,8 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final emailTextController = TextEditingController();
-  final passwordTextController = TextEditingController();
-
   Future signIn() async {
     AuthManager().signIn();
-  }
-
-  @override
-  void dispose() {
-    emailTextController.dispose();
-    passwordTextController.dispose();
-    super.dispose();
   }
 
   @override
@@ -30,7 +20,8 @@ class _LoginViewState extends State<LoginView> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Center(
-              child: GestureDetector(onTap: signIn, child: Text("Sign in"))),
+              child:
+                  GestureDetector(onTap: signIn, child: const Text("Sign in"))),
         ),
       ),
     );

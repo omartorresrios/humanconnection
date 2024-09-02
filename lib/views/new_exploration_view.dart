@@ -150,7 +150,7 @@ class _NewExplorationViewState extends State<NewExplorationView> {
 
 Future<void> createExploration(
     String text, List<String> sources, BuildContext context) async {
-  const url = 'http://127.0.0.1:3000/api/create_exploration';
+  const url = 'http://192.168.1.86:3000/api/create_exploration';
   Map data = {
     'exploration': {'text': text, 'sources': sources}
   };

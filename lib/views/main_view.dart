@@ -22,7 +22,7 @@ class _MainViewState extends State<MainView> {
   int selectedIndex = 0;
 
   Future<List<Exploration>> fetchExplorations() async {
-    const url = 'http://127.0.0.1:3000/api/all_explorations';
+    const url = 'http://192.168.1.86:3000/api/all_explorations';
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       return parseExplorations(response.body);

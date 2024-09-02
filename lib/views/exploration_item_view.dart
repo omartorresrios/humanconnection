@@ -40,7 +40,7 @@ class ExplorationItemView extends StatelessWidget {
                       ExplorerList(
                           explorerProfilePictureUrls: exploration
                               .sharedExplorations
-                              .map((e) => e.user.profilePicture)
+                              .map((e) => e.user.picture)
                               .toList()),
                   ],
                 ),

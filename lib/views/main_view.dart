@@ -5,14 +5,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import '../custom_views/navigation_bar_view.dart';
 import '../models/exploration.dart';
+import '../models/user.dart';
 import 'connect_view.dart';
 import 'explorations_view.dart';
 
 class MainView extends StatefulWidget {
   final explorationList = Exploration.explorationList();
-  final String userPictureUrl;
+  final UserData user;
 
-  MainView({super.key, required this.userPictureUrl});
+  MainView({super.key, required this.user});
 
   @override
   State<MainView> createState() => _MainViewState();
@@ -37,7 +38,7 @@ class _MainViewState extends State<MainView> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 247, 247, 247),
-        appBar: NavigationBarView(userPictureUrl: widget.userPictureUrl),
+        appBar: NavigationBarView(user: widget.user),
         body: Padding(
           padding: const EdgeInsets.only(
               left: 8.0, top: 0.0, right: 8.0, bottom: 0.0),

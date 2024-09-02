@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import '../models/user.dart';
 
 class ExplorerProfileView extends StatelessWidget {
-  final User user;
+  final UserData user;
 
   const ExplorerProfileView({super.key, required this.user});
 
@@ -32,7 +32,7 @@ class ExplorerProfileView extends StatelessWidget {
             const SizedBox(height: 20),
             CircleAvatar(
               radius: 50,
-              backgroundImage: NetworkImage(user.profilePicture),
+              backgroundImage: NetworkImage(user.picture),
             ),
             const SizedBox(height: 20),
             TextField(

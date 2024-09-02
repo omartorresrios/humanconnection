@@ -244,7 +244,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   image: CachedNetworkImageProvider(
-                      explorations[index].user.profilePicture),
+                      explorations[index].user.picture),
                   fit: BoxFit.cover,
                 ),
               ),

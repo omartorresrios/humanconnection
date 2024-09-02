@@ -52,7 +52,7 @@ class _ExplorerDetailsViewState extends State<ExplorerDetailsView> {
                   child: CircleAvatar(
                     radius: 50,
                     backgroundImage:
-                        NetworkImage(widget.exploration.user.profilePicture),
+                        NetworkImage(widget.exploration.user.picture),
                   ),
                   onTap: () {
                     HapticFeedback.heavyImpact();
@@ -131,7 +131,7 @@ class _ExplorerDetailsViewState extends State<ExplorerDetailsView> {
     }
   }
 
-  void openExplorerProfile(User user) {
+  void openExplorerProfile(UserData user) {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,

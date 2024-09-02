@@ -5,8 +5,8 @@ import 'package:humanconnection/custom_views/my_profile_view.dart';
 import '../models/user.dart';
 
 class NavigationBarView extends StatelessWidget implements PreferredSizeWidget {
-  final String userPictureUrl;
-  const NavigationBarView({super.key, required this.userPictureUrl});
+  final UserData user;
+  const NavigationBarView({super.key, required this.user});
 
   Future signOut() async {
     AuthManager().signOut();
@@ -36,20 +36,18 @@ class NavigationBarView extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     child: IntrinsicHeight(
                       child: MyProfileView(
-                          user: User(
-                              id: "1",
-                              fullname: "omar torres",
-                              profilePicture: "some",
-                              bio: "hello there",
-                              city: "Barcelona",
-                              email: "torresomar44@gmail.com")),
+                          user: UserData.profileInfo(
+                              fullname: user.fullname,
+                              picture: user.picture,
+                              bio: user.bio,
+                              city: user.city)),
                     ),
                   );
                 },
               );
             },
             child: CircleAvatar(
-              backgroundImage: NetworkImage(userPictureUrl),
+              backgroundImage: NetworkImage(user.picture),
             ),
           ),
         ],

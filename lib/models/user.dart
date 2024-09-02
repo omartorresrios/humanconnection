@@ -1,24 +1,35 @@
-class User {
+import 'dart:convert';
+
+class UserData {
   String id;
   String fullname;
-  String profilePicture;
+  String picture;
   String bio;
   String city;
   String email;
 
-  User(
+  UserData(
       {required this.id,
       required this.fullname,
-      required this.profilePicture,
+      required this.picture,
       required this.bio,
       required this.city,
       required this.email});
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  UserData.profileInfo({
+    this.id = "",
+    required this.fullname,
+    this.email = "",
+    required this.picture,
+    required this.bio,
+    required this.city,
+  });
+
+  factory UserData.fromJson(Map<String, dynamic> json) {
+    return UserData(
       id: json['id'],
       fullname: json['fullname'],
-      profilePicture: json['profile_picture'],
+      picture: json['picture'],
       bio: json['bio'],
       city: json['city'],
       email: json['email'],
@@ -29,10 +40,22 @@ class User {
     return {
       'id': id,
       'fullname': fullname,
-      'profile_picture': profilePicture,
+      'picture': picture,
       'bio': bio,
       'city': city,
       'email': email,
     };
   }
+}
+
+UserData parseUser(String responseText) {
+  final parsed = json.decode(responseText);
+  return UserData(
+    id: parsed['id'],
+    fullname: parsed['fullname'],
+    picture: parsed['picture'],
+    bio: parsed['bio'],
+    city: parsed['city'],
+    email: parsed['email'],
+  );
 }

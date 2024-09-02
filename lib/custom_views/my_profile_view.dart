@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import '../models/user.dart';
 
 class MyProfileView extends StatefulWidget {
-  final User user;
+  final UserData user;
 
   const MyProfileView({super.key, required this.user});
 

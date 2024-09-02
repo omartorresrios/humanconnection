@@ -6,7 +6,7 @@ class Exploration {
   String id;
   String text;
   List<Source> sources;
-  User user;
+  UserData user;
   List<Exploration> sharedExplorations;
 
   Exploration(
@@ -30,7 +30,7 @@ class Exploration {
         id: json['id'],
         text: json['text'],
         sources: sources,
-        user: User.fromJson(json['user']),
+        user: UserData.fromJson(json['user']),
         sharedExplorations: sharedExplorations);
   }
 
@@ -55,10 +55,10 @@ class Exploration {
             Source(text: "http://source-two.com"),
             Source(text: "http://source-three.com")
           ],
-          user: User(
+          user: UserData(
               id: "3",
               fullname: "Omar Torres",
-              profilePicture: "photoUrl",
+              picture: "photoUrl",
               bio: "user.bio",
               city: "user.city",
               email: "user.email"),
@@ -71,10 +71,10 @@ class Exploration {
                   Source(text: "http://source-nine.com"),
                   Source(text: "http://source-tenth.com")
                 ],
-                user: User(
+                user: UserData(
                     id: "1",
                     fullname: "Martha Poms",
-                    profilePicture: "some-url",
+                    picture: "some-url",
                     bio: "user.bio",
                     city: "user.city",
                     email: "user.email"),
@@ -83,10 +83,10 @@ class Exploration {
                 id: "3",
                 text: "Another exploration",
                 sources: [Source(text: "source1"), Source(text: "source2")],
-                user: User(
+                user: UserData(
                     id: "3",
                     fullname: "August Vall",
-                    profilePicture: "some-url",
+                    picture: "some-url",
                     bio: "user.bio",
                     city: "user.city",
                     email: "user.email"),
@@ -101,10 +101,10 @@ class Exploration {
           Source(text: "http://source-two.com"),
           Source(text: "http://source-three.com")
         ],
-        user: User(
+        user: UserData(
             id: "3",
             fullname: "Omar Torres",
-            profilePicture: "photoUrl",
+            picture: "photoUrl",
             bio: "user.bio",
             city: "user.city",
             email: "user.email"),
@@ -113,10 +113,10 @@ class Exploration {
               id: "2",
               text: "Another exploration",
               sources: [Source(text: "source1"), Source(text: "source2")],
-              user: User(
+              user: UserData(
                   id: "1",
                   fullname: "Martha Poms",
-                  profilePicture: "some-url",
+                  picture: "some-url",
                   bio: "user.bio",
                   city: "user.city",
                   email: "user.email"),
@@ -125,10 +125,10 @@ class Exploration {
               id: "3",
               text: "Another exploration",
               sources: [Source(text: "source1"), Source(text: "source2")],
-              user: User(
+              user: UserData(
                   id: "2",
                   fullname: "Thomas Grews",
-                  profilePicture: "some-url",
+                  picture: "some-url",
                   bio: "user.bio",
                   city: "user.city",
                   email: "user.email"),
@@ -144,10 +144,10 @@ class Exploration {
           Source(text: "http://source-two.com"),
           Source(text: "http://source-three.com")
         ],
-        user: User(
+        user: UserData(
             id: "3",
             fullname: "Omar Torres",
-            profilePicture: "photoUrl",
+            picture: "photoUrl",
             bio: "user.bio",
             city: "user.city",
             email: "user.email"),
@@ -156,10 +156,10 @@ class Exploration {
               id: "2",
               text: "Another exploration",
               sources: [Source(text: "source1"), Source(text: "source2")],
-              user: User(
+              user: UserData(
                   id: "3",
                   fullname: "August Vall",
-                  profilePicture: "some-url",
+                  picture: "some-url",
                   bio: "user.bio",
                   city: "user.city",
                   email: "user.email"),

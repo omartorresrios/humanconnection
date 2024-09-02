@@ -2,13 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:humanconnection/models/current_user.dart';
+import 'package:humanconnection/models/user.dart';
 
 class AuthManager {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   static final userIsLoggedInController =
-      StreamController<CurrentUserInfo?>.broadcast();
-  static Stream<CurrentUserInfo?> get userIsLoggedIn =>
+      StreamController<UserData?>.broadcast();
+  static Stream<UserData?> get userIsLoggedIn =>
       userIsLoggedInController.stream;
 
   signIn() async {
@@ -30,7 +30,7 @@ class AuthManager {
         headers: {'AUTHORIZATION_TOKEN': token},
       );
       if (response.statusCode == 200) {
-        var currentUser = parseCurrentUser(response.body);
+        var currentUser = parseUser(response.body);
         userIsLoggedInController.add(currentUser);
       } else {
         print("Token validation failed with status: ${response.toString()}");

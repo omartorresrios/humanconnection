@@ -42,6 +42,15 @@ class AuthManager {
     }
   }
 
+  Future<void> signOutInBackend() async {
+    const url = 'http://192.168.1.86:3000/api/users/auth/logout';
+    try {
+      await http.post(Uri.parse(url));
+    } catch (e) {
+      print("Token validation failed with error: $e");
+    }
+  }
+
   User? getCurrentUser() {
     return _firebaseAuth.currentUser;
   }
@@ -49,5 +58,6 @@ class AuthManager {
   signOut() async {
     _firebaseAuth.signOut();
     userIsLoggedInController.add(null);
+    await signOutInBackend();
   }
 }

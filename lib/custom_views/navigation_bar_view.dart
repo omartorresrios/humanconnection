@@ -38,6 +38,7 @@ class NavigationBarView extends StatelessWidget implements PreferredSizeWidget {
                     child: IntrinsicHeight(
                       child: MyProfileView(
                           user: UserData.profileInfo(
+                              id: user.id,
                               fullname: user.fullname,
                               picture: user.picture,
                               bio: user.bio,

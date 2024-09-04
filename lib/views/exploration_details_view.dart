@@ -158,9 +158,9 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       HapticFeedback.heavyImpact();
-                      updateExploration(
+                      await updateExploration(
                           widget.exploration.id,
                           explorationTextController.text,
                           sourceControllers

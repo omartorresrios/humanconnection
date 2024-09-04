@@ -64,7 +64,6 @@ class _MyProfileViewState extends State<MyProfileView> {
   }
 
   Future<void> updateProfile(String id, String city, String bio) async {
-    print("user id: $id");
     String url = 'http://192.168.1.86:3000/api/update_profile?id=$id';
     Map data = {
       'user': {'city': city, 'bio': bio}
@@ -78,7 +77,6 @@ class _MyProfileViewState extends State<MyProfileView> {
         },
         body: jsonEncode(data),
       );
-      print(response.body);
       if (response.statusCode == 200) {
         print('maybe a loader to be hide here');
       } else {

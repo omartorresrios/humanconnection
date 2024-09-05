@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
+import '../helpers/service.dart';
 
 class NewExplorationView extends StatefulWidget {
   const NewExplorationView({super.key});
@@ -68,12 +67,15 @@ class _NewExplorationViewState extends State<NewExplorationView> {
                           ? () async {
                               HapticFeedback.heavyImpact();
                               Navigator.pop(context);
-                              await createExploration(
+                              await Service.createExploration(
                                   explorationTextEditing.text,
                                   sourceControllers
                                       .map((source) => source.text)
-                                      .toList(),
-                                  context);
+                                      .toList(), (bool onCompleted) {
+                                if (context.mounted) {
+                                  Navigator.pop(context, 'success');
+                                }
+                              });
                             }
                           : null,
                       child: const Text('Create'),
@@ -145,32 +147,5 @@ class _NewExplorationViewState extends State<NewExplorationView> {
       },
       separatorBuilder: (context, index) => const SizedBox(height: 8),
     );
-  }
-}
-
-Future<void> createExploration(
-    String text, List<String> sources, BuildContext context) async {
-  const url = 'http://192.168.1.86:3000/api/create_exploration';
-  Map data = {
-    'exploration': {'text': text, 'sources': sources}
-  };
-  try {
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: jsonEncode(data),
-    );
-    if (response.statusCode == 200) {
-      if (context.mounted) {
-        Navigator.pop(context, 'success');
-      }
-    } else {
-      print("Request failed with status: ${response.statusCode}");
-    }
-  } catch (e) {
-    print("Request error: $e");
   }
 }

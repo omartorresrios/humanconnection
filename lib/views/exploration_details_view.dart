@@ -4,8 +4,6 @@ import 'package:humanconnection/views/explorer_details_view.dart';
 import '../helpers/service.dart';
 import '../models/exploration.dart';
 import '../models/source.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ExplorationDetailsView extends StatefulWidget {

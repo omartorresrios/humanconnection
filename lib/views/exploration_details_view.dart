@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:humanconnection/views/explorer_details_view.dart';
+import '../helpers/service.dart';
 import '../models/exploration.dart';
 import '../models/source.dart';
 import 'dart:convert';
@@ -160,12 +161,16 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                     ),
                     onPressed: () async {
                       HapticFeedback.heavyImpact();
-                      await updateExploration(
+                      await Service.updateExploration(
                           widget.exploration.id,
                           explorationTextController.text,
                           sourceControllers
                               .map((source) => source.text)
-                              .toList());
+                              .toList(), (bool explorationWasUpdated) {
+                        setState(() {
+                          explorationUpdated = explorationWasUpdated;
+                        });
+                      });
                     },
                     child: const Text('Save'),
                   )
@@ -256,32 +261,5 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
       },
       separatorBuilder: (context, index) => const SizedBox(height: 8),
     );
-  }
-
-  Future<void> updateExploration(
-      String id, String text, List<String> sources) async {
-    String url = 'http://192.168.1.86:3000/api/update_exploration?id=$id';
-    Map data = {
-      'exploration': {'text': text, 'sources': sources}
-    };
-    try {
-      final response = await http.put(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: jsonEncode(data),
-      );
-      if (response.statusCode == 200) {
-        setState(() {
-          explorationUpdated = true;
-        });
-      } else {
-        throw Exception('Failed to update exploration');
-      }
-    } catch (e) {
-      print('some error: $e');
-    }
   }
 }

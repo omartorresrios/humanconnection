@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:humanconnection/views/new_exploration_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 import '../custom_views/navigation_bar_view.dart';
+import '../helpers/service.dart';
 import '../models/exploration.dart';
 import '../models/user.dart';
 import 'connect_view.dart';
@@ -23,16 +23,6 @@ class _MainViewState extends State<MainView> {
   final GlobalKey<ExplorationsViewState> explorationsKey =
       GlobalKey<ExplorationsViewState>();
   int selectedIndex = 0;
-
-  Future<List<Exploration>> fetchExplorations() async {
-    const url = 'http://192.168.1.86:3000/api/all_explorations';
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      return parseExplorations(response.body);
-    } else {
-      throw Exception('Failed to load explorations');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +90,8 @@ class _MainViewState extends State<MainView> {
   }
 
   void fetchAndReloadExplorations() {
-    explorationsKey.currentState?.reloadExplorations(fetchExplorations());
+    explorationsKey.currentState
+        ?.reloadExplorations(Service.fetchExplorations());
   }
 
   void showToast() {

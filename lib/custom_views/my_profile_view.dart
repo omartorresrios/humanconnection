@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../helpers/service.dart';
 import '../models/user.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class MyProfileView extends StatefulWidget {
   final UserData user;
@@ -63,30 +62,6 @@ class _MyProfileViewState extends State<MyProfileView> {
     super.dispose();
   }
 
-  Future<void> updateProfile(String id, String city, String bio) async {
-    String url = 'http://192.168.1.86:3000/api/update_profile?id=$id';
-    Map data = {
-      'user': {'city': city, 'bio': bio}
-    };
-    try {
-      final response = await http.put(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: jsonEncode(data),
-      );
-      if (response.statusCode == 200) {
-        print('maybe a loader to be hide here');
-      } else {
-        throw Exception('Failed to update profile');
-      }
-    } catch (e) {
-      print('There was an error when updating the profile: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -122,7 +97,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                             ),
                             onPressed: () async {
                               HapticFeedback.heavyImpact();
-                              await updateProfile(
+                              await Service.updateProfile(
                                   widget.user.id,
                                   cityTextController.text,
                                   bioTextController.text);

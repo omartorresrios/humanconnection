@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
+import '../helpers/service.dart';
 import '../models/exploration.dart';
 import 'exploration_details_view.dart';
 import 'exploration_item_view.dart';
@@ -19,17 +19,7 @@ class ExplorationsViewState extends State<ExplorationsView> {
   @override
   void initState() {
     super.initState();
-    reloadExplorations(fetchExplorations());
-  }
-
-  Future<List<Exploration>> fetchExplorations() async {
-    const url = 'http://192.168.1.86:3000/api/all_explorations';
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      return parseExplorations(response.body);
-    } else {
-      throw Exception('Failed to load explorations');
-    }
+    reloadExplorations(Service.fetchExplorations());
   }
 
   void reloadExplorations(Future<List<Exploration>> newExplorations) {
@@ -41,7 +31,7 @@ class ExplorationsViewState extends State<ExplorationsView> {
   void fetchNewExplorations(String result) async {
     if (result == 'success') {
       setState(() {
-        reloadExplorations(fetchExplorations());
+        reloadExplorations(Service.fetchExplorations());
       });
       Fluttertoast.showToast(
         msg: "Your exploration has been created!",
@@ -92,7 +82,7 @@ class ExplorationsViewState extends State<ExplorationsView> {
             ).then((explorationUpdated) {
               if (explorationUpdated == true) {
                 setState(() {
-                  reloadExplorations(fetchExplorations());
+                  reloadExplorations(Service.fetchExplorations());
                 });
               }
             });

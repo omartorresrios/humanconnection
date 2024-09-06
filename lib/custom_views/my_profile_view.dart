@@ -75,8 +75,11 @@ class _MyProfileViewState extends State<MyProfileView> {
               children: [
                 TextButton(
                   style: TextButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      overlayColor: Colors.transparent),
+                    overlayColor: Colors.transparent,
+                    padding: EdgeInsets.zero,
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                   onPressed: () {
                     HapticFeedback.heavyImpact();
                     Navigator.pop(context);

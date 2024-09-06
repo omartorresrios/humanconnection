@@ -93,39 +93,8 @@ class ExplorationsViewState extends State<ExplorationsView> {
   }
 
   Widget createFirstExplorationWidget() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text("Create your first exploration"),
-          const SizedBox(height: 0),
-          Container(
-            padding: EdgeInsets.zero,
-            margin: EdgeInsets.zero,
-            child: ElevatedButton(
-              onPressed: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const NewExplorationView()),
-                );
-                fetchNewExplorations(result);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 53, 53, 53),
-                foregroundColor: Color.fromARGB(255, 255, 255, 255),
-                shape: const CircleBorder(),
-                fixedSize: Size(20, 20),
-                padding: EdgeInsets.zero,
-              ),
-              child: const Icon(
-                Icons.add,
-                size: 15,
-              ),
-            ),
-          )
-        ],
-      ),
+    return const Center(
+      child: Text("Create your first exploration"),
     );
   }
 }

@@ -58,7 +58,7 @@ class _NewExplorationViewState extends State<NewExplorationView> {
                     GestureDetector(
                         onTap: () {
                           HapticFeedback.heavyImpact();
-                          Navigator.pop(context);
+                          Navigator.pop(context, 'nothing');
                         },
                         child: const Text("Cancel")),
                     const Spacer(),

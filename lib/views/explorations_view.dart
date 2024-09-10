@@ -4,7 +4,6 @@ import '../helpers/service.dart';
 import '../models/exploration.dart';
 import 'exploration_details_view.dart';
 import 'exploration_item_view.dart';
-import 'new_exploration_view.dart';
 
 class ExplorationsView extends StatefulWidget {
   const ExplorationsView({super.key});

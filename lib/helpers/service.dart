@@ -81,7 +81,7 @@ class Service {
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          'Authorization': 'Bearer $currentUserAuthToken',
         },
         body: jsonEncode(data),
       );

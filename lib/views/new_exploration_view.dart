@@ -66,7 +66,6 @@ class _NewExplorationViewState extends State<NewExplorationView> {
                       onTap: isButtonActive
                           ? () async {
                               HapticFeedback.heavyImpact();
-                              Navigator.pop(context);
                               await Service.createExploration(
                                   explorationTextEditing.text,
                                   sourceControllers

@@ -61,7 +61,7 @@ class NavigationBarView extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
               ),
-              placeholder: (context, url) => CircularProgressIndicator(),
+              placeholder: (context, url) => const CircularProgressIndicator(),
               errorWidget: (context, url, error) => Text("error: $error"),
             ),
           ),

@@ -14,7 +14,7 @@ class _ConnectViewState extends State<ConnectView> {
         appBar: AppBar(
           title: const Text("Connect"),
         ),
-        body: Center(
+        body: const Center(
           child: Text("Connect view"),
         ));
   }

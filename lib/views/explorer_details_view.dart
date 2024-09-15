@@ -64,7 +64,7 @@ class _ExplorerDetailsViewState extends State<ExplorerDetailsView> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Color.fromARGB(61, 78, 78, 78),
+                      color: const Color.fromARGB(61, 78, 78, 78),
                       width: 1,
                     ),
                     borderRadius: BorderRadius.circular(10),
@@ -81,11 +81,11 @@ class _ExplorerDetailsViewState extends State<ExplorerDetailsView> {
                 const SizedBox(height: 8),
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   alignment: Alignment.centerLeft,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Color.fromARGB(61, 78, 78, 78),
+                      color: const Color.fromARGB(61, 78, 78, 78),
                       width: 1,
                     ),
                     borderRadius: BorderRadius.circular(10),

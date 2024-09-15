@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
 import 'package:humanconnection/models/user.dart';
@@ -11,6 +12,8 @@ class AuthManager {
       StreamController<UserData?>.broadcast();
   static Stream<UserData?> get userIsLoggedIn =>
       userIsLoggedInController.stream;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   signIn() async {
     final GoogleSignInAccount? user = await GoogleSignIn().signIn();
@@ -35,6 +38,7 @@ class AuthManager {
     );
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print('User granted permission');
+      setupLocalNotifications();
     } else {
       print('User declined or has not accepted permission');
     }
@@ -42,6 +46,44 @@ class AuthManager {
     if (fcmToken != null) {
       await Service.saveFCMToken(fcmToken);
     }
+  }
+
+  void setupLocalNotifications() async {
+    const AndroidInitializationSettings androidSettings =
+        AndroidInitializationSettings('app_icon');
+
+    const DarwinInitializationSettings iOSSettings =
+        DarwinInitializationSettings(
+            requestAlertPermission: true,
+            requestBadgePermission: true,
+            requestSoundPermission: true);
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: androidSettings,
+      iOS: iOSSettings,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        flutterLocalNotificationsPlugin.show(
+          message.notification.hashCode,
+          message.notification!.title,
+          message.notification!.body,
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              'your_channel_id',
+              'your_channel_name',
+            ),
+            iOS: DarwinNotificationDetails(),
+          ),
+        );
+      }
+    });
   }
 
   User? getCurrentUser() {

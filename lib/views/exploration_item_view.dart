@@ -78,7 +78,7 @@ class ExplorerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 20,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -99,7 +99,7 @@ class ExplorerList extends StatelessWidget {
                   ),
                 ),
               ),
-              placeholder: (context, url) => CircularProgressIndicator(),
+              placeholder: (context, url) => const CircularProgressIndicator(),
               errorWidget: (context, url, error) => Text("error: $error"),
             ),
           );

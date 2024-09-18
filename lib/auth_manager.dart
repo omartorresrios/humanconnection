@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:humanconnection/helpers/notification_service.dart';
 import 'dart:async';
 import 'package:humanconnection/models/user.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'helpers/service.dart';
 
 class AuthManager {
@@ -12,8 +13,6 @@ class AuthManager {
       StreamController<UserData?>.broadcast();
   static Stream<UserData?> get userIsLoggedIn =>
       userIsLoggedInController.stream;
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
 
   signIn() async {
     final GoogleSignInAccount? user = await GoogleSignIn().signIn();
@@ -24,66 +23,62 @@ class AuthManager {
       await _firebaseAuth.signInWithCredential(credential);
       await Service.validateToken(auth.idToken!, (UserData? currentUser) {
         userIsLoggedInController.add(currentUser);
+        setupFirebaseMessaging(auth.idToken!);
       });
-      setupFirebaseMessaging(auth.idToken!);
     }
   }
 
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
   void setupFirebaseMessaging(String currentUserToken) async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    NotificationSettings settings = await messaging.requestPermission(
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? isPermissionRequested = prefs.getBool('isPermissionRequested');
+    if (isPermissionRequested == null || !isPermissionRequested) {
+      NotificationSettings settings = await messaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      print('authorizationStatus: ${settings.authorizationStatus}');
+      await prefs.setBool('isPermissionRequested', true);
+    } else {
+      print('Notification permission has already been requested.');
+    }
+    String? fcmToken = await messaging.getToken();
+    if (fcmToken != null) {
+      print("fcmToken: ${fcmToken}");
+      await Service.saveFCMToken(fcmToken);
+      setupForegroundNotifications();
+    }
+  }
+
+  void setupForegroundNotifications() async {
+    print('hellooooooo');
+    messaging.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
     );
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-      setupLocalNotifications();
-    } else {
-      print('User declined or has not accepted permission');
-    }
-    String? fcmToken = await messaging.getToken();
-    if (fcmToken != null) {
-      await Service.saveFCMToken(fcmToken);
-    }
-  }
-
-  void setupLocalNotifications() async {
-    const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('app_icon');
-
-    const DarwinInitializationSettings iOSSettings =
-        DarwinInitializationSettings(
-            requestAlertPermission: true,
-            requestBadgePermission: true,
-            requestSoundPermission: true);
-
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: androidSettings,
-      iOS: iOSSettings,
+    FirebaseMessaging.onMessage.listen(
+      (RemoteMessage message) {
+        try {
+          print('Got a message whilst in the foreground!');
+          var matchedExplorationId = message.data["exploration_id"];
+          print('matchedExploration: $matchedExplorationId');
+          if (message.notification?.apple?.badge != null) {
+            NotificationService().addNotificationToExploration(
+                matchedExplorationId,
+                int.parse(message.notification!.apple!.badge!));
+          }
+        } catch (e) {
+          print('Error processing message: $e');
+          // Handle the error accordingly, e.g., show an alert or log it
+        }
+      },
+      onError: (error) {
+        // Handle any errors that occur while listening to messages
+        print('Error occurred while listening for messages: $error');
+      },
     );
-
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Message data: ${message.data}');
-
-      if (message.notification != null) {
-        flutterLocalNotificationsPlugin.show(
-          message.notification.hashCode,
-          message.notification!.title,
-          message.notification!.body,
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'your_channel_id',
-              'your_channel_name',
-            ),
-            iOS: DarwinNotificationDetails(),
-          ),
-        );
-      }
-    });
   }
 
   User? getCurrentUser() {

@@ -25,7 +25,6 @@ class ExplorationItemView extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                // flex: 2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -46,23 +45,9 @@ class ExplorationItemView extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 20),
-              Container(
-                height: 25,
-                width: 25,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.green,
-                ),
-                child: const Center(
-                  child: Text(
-                    '3',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
-              )
+              if (exploration.notificationCount != null &&
+                  exploration.notificationCount! > 0)
+                CircleAvatar(child: Text('${exploration.notificationCount}'))
             ],
           ),
         ),

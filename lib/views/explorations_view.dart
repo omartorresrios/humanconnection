@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:humanconnection/helpers/notification_provider.dart';
+import 'package:humanconnection/helpers/notification_service.dart';
+import 'package:provider/provider.dart';
 import '../helpers/service.dart';
 import '../models/exploration.dart';
 import 'exploration_details_view.dart';
@@ -47,44 +50,54 @@ class ExplorationsViewState extends State<ExplorationsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 247, 247, 247),
-        body: FutureBuilder<List<Exploration>>(
-            future: explorations,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data!.isEmpty) {
-                  return createFirstExplorationWidget();
-                } else {
-                  return explorationsWidget(snapshot);
-                }
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              } else {
-                return const CircularProgressIndicator();
-              }
-            }));
+      backgroundColor: const Color.fromARGB(255, 247, 247, 247),
+      body: FutureBuilder<List<Exploration>>(
+        future: explorations,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return createFirstExplorationWidget();
+          } else {
+            final provider = NotificationProvider(snapshot.data!);
+            NotificationService().setProvider(provider);
+            return ChangeNotifierProvider.value(
+              value: provider,
+              child: explorationsWidget(),
+            );
+          }
+        },
+      ),
+    );
   }
 
-  Widget explorationsWidget(AsyncSnapshot snapshot) {
-    return ListView.builder(
-      itemCount: snapshot.data!.length,
-      itemBuilder: (context, index) {
-        return ExplorationItemView(
-          exploration: snapshot.data![index],
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ExplorationDetailsView(
-                        exploration: snapshot.data![index],
-                      )),
-            ).then((explorationUpdated) {
-              if (explorationUpdated == true) {
-                setState(() {
-                  reloadExplorations(Service.fetchExplorations());
+  Widget explorationsWidget() {
+    return Consumer<NotificationProvider>(
+      builder: (context, provider, child) {
+        return ListView.builder(
+          itemCount: provider.explorations.length,
+          itemBuilder: (context, index) {
+            return ExplorationItemView(
+              exploration: provider.explorations[index],
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ExplorationDetailsView(
+                      exploration: provider.explorations[index],
+                    ),
+                  ),
+                ).then((explorationUpdated) {
+                  if (explorationUpdated == true) {
+                    setState(() {
+                      reloadExplorations(Service.fetchExplorations());
+                    });
+                  }
                 });
-              }
-            });
+              },
+            );
           },
         );
       },

@@ -147,4 +147,23 @@ class Service {
       print('some error: $e');
     }
   }
+
+  static Future<void> markAllNotificationsAsRead(
+      Function(bool) onComplete) async {
+    const url = 'http://192.168.1.86:3000/api/mark_all_notifications_as_read';
+    try {
+      final response = await http.post(Uri.parse(url), headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $currentUserAuthToken',
+      });
+      if (response.statusCode == 204) {
+        onComplete(true);
+      } else {
+        onComplete(false);
+      }
+    } catch (e) {
+      onComplete(false);
+      print("Request error: $e");
+    }
+  }
 }

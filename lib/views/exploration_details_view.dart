@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:humanconnection/helpers/notification_service.dart';
 import 'package:humanconnection/views/explorer_details_view.dart';
 import '../helpers/service.dart';
 import '../models/exploration.dart';
@@ -29,6 +30,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
     setExploration();
     setSources();
     setupListeners();
+    markAllNotificationsAsRead();
   }
 
   void setExploration() {
@@ -47,6 +49,18 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
     explorationTextController.addListener(checkForChanges);
     for (final TextEditingController sourceController in sourceControllers) {
       sourceController.addListener(checkForChanges);
+    }
+  }
+
+  void markAllNotificationsAsRead() async {
+    if (widget.exploration.notificationCount != null &&
+        widget.exploration.notificationCount! > 0) {
+      await Service.markAllNotificationsAsRead((bool markingCompleted) {
+        if (markingCompleted == true) {
+          NotificationService()
+              .addNotificationToExploration(widget.exploration.id, 0);
+        }
+      });
     }
   }
 

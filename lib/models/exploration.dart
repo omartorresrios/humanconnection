@@ -8,13 +8,15 @@ class Exploration {
   List<Source> sources;
   UserData user;
   List<Exploration> sharedExplorations;
+  int? notificationCount;
 
   Exploration(
       {required this.id,
       required this.text,
       required this.sources,
       required this.user,
-      required this.sharedExplorations});
+      required this.sharedExplorations,
+      this.notificationCount = 0});
 
   factory Exploration.fromJson(Map<String, dynamic> json) {
     final parsedSources = List<String>.from(json['sources']);

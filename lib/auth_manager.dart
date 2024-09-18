@@ -1,11 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:humanconnection/helpers/notification_service.dart';
+import 'package:humanconnection/main.dart';
 import 'dart:async';
 import 'package:humanconnection/models/user.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:humanconnection/views/exploration_details_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'helpers/service.dart';
+import 'models/exploration.dart';
 
 class AuthManager {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -58,6 +62,11 @@ class AuthManager {
       badge: true,
       sound: true,
     );
+    setNotificationCountToExplorationUponNewNotificationArriving();
+    openExplorationViewOnNotificationTap();
+  }
+
+  void setNotificationCountToExplorationUponNewNotificationArriving() {
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) {
         try {
@@ -79,6 +88,23 @@ class AuthManager {
         print('Error occurred while listening for messages: $error');
       },
     );
+  }
+
+  void openExplorationViewOnNotificationTap() {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      var matchedExplorationId = message.data["exploration_id"];
+      final provider = NotificationService().provider;
+      Exploration? exploration = provider.explorations.firstWhere(
+        (exp) => exp.id == matchedExplorationId,
+        orElse: () => throw Exception('Failed to find exploration'),
+      );
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(
+          builder: (context) =>
+              ExplorationDetailsView(exploration: exploration),
+        ),
+      );
+    });
   }
 
   User? getCurrentUser() {

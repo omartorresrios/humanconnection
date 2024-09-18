@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:humanconnection/views/root_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -13,9 +15,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
-      home: RootView(),
+      home: const RootView(),
     );
   }
 }

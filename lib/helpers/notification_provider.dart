@@ -12,10 +12,7 @@ class NotificationProvider extends ChangeNotifier {
       (exp) => exp.id == explorationId,
       orElse: () => throw Exception('Failed to find exploration'),
     );
-    print("setting notification count: $unreadNotifications");
     matchedExploration.notificationCount = unreadNotifications;
-    print(
-        "matchedExploration.notificationCount: ${matchedExploration.notificationCount}");
     notifyListeners();
   }
 }

@@ -1,8 +1,8 @@
 import 'package:humanconnection/helpers/notification_provider.dart';
 
 class NotificationService {
-  static final NotificationService instance = NotificationService.internal();
-  factory NotificationService() => instance;
+  static final NotificationService _instance = NotificationService._internal();
+  factory NotificationService() => _instance;
 
   NotificationProvider? _provider;
 
@@ -25,5 +25,5 @@ class NotificationService {
     }
   }
 
-  NotificationService.internal();
+  NotificationService._internal();
 }

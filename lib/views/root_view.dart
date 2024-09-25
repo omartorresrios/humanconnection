@@ -8,34 +8,10 @@ class RootView extends StatefulWidget {
   const RootView({super.key});
 
   @override
-  _RootViewState createState() => _RootViewState();
+  State<RootView> createState() => _RootViewState();
 }
 
-class _RootViewState extends State<RootView> with WidgetsBindingObserver {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      // The app has been opened or brought to the foreground
-      print('App is in the foreground');
-      // Perform any action needed when the app is opened
-    } else if (state == AppLifecycleState.paused) {
-      // The app is in the background
-      print('App is in the background');
-    }
-  }
-
+class _RootViewState extends State<RootView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

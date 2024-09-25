@@ -13,16 +13,24 @@ class AuthManager {
       userIsLoggedInController.stream;
 
   signIn() async {
-    final GoogleSignInAccount? user = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication? auth = await user?.authentication;
-    if (auth != null) {
+    try {
+      final GoogleSignInAccount? user = await GoogleSignIn().signIn();
+      if (user == null) {
+        return;
+      }
+
+      final GoogleSignInAuthentication auth = await user.authentication;
       final credential = GoogleAuthProvider.credential(
-          accessToken: auth.accessToken, idToken: auth.idToken);
+        accessToken: auth.accessToken,
+        idToken: auth.idToken,
+      );
       await _firebaseAuth.signInWithCredential(credential);
       await Service.validateToken(auth.idToken!, (UserData? currentUser) {
         userIsLoggedInController.add(currentUser);
         setupFirebaseMessaging(auth.idToken!);
       });
+    } catch (e) {
+      print("Error during sign-in: $e");
     }
   }
 
@@ -30,7 +38,6 @@ class AuthManager {
   void setupFirebaseMessaging(String currentUserToken) async {
     String? fcmToken = await messaging.getToken();
     if (fcmToken != null) {
-      print("fcmToken: ${fcmToken}");
       await Service.saveFCMToken(fcmToken);
     }
   }
@@ -43,5 +50,11 @@ class AuthManager {
     _firebaseAuth.signOut();
     userIsLoggedInController.add(null);
     await Service.signOutInBackend();
+  }
+
+  deleteAccount() async {
+    _firebaseAuth.currentUser?.delete();
+    userIsLoggedInController.add(null);
+    await Service.deleteAccountInBackend();
   }
 }

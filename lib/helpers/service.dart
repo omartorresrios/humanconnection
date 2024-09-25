@@ -166,4 +166,19 @@ class Service {
       print("Request error: $e");
     }
   }
+
+  static Future<void> deleteAccountInBackend() async {
+    const url = 'http://192.168.1.86:3000/api/users/auth/delete';
+    try {
+      final response = await http.post(Uri.parse(url), headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $currentUserAuthToken',
+      });
+      if (response.statusCode == 200) {
+        currentUserAuthToken = "";
+      }
+    } catch (e) {
+      print("Token validation failed with error: $e");
+    }
+  }
 }

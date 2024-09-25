@@ -18,12 +18,6 @@ import UIKit
 		return super.application(application, didFinishLaunchingWithOptions: launchOptions)
 	}
 	
-	override func applicationDidBecomeActive(_ application: UIApplication) {
-		UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
-			print("Permission granted: \(granted), error: \(String(describing: error))")
-		}
-	}
-	
 	// notification on foreground
 	override func userNotificationCenter(_ center: UNUserNotificationCenter,
 										 willPresent notification: UNNotification,

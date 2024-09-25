@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:humanconnection/helpers/notification_provider.dart';
 import 'package:humanconnection/helpers/notification_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../helpers/service.dart';
 import '../models/exploration.dart';
@@ -9,7 +10,9 @@ import 'exploration_details_view.dart';
 import 'exploration_item_view.dart';
 
 class ExplorationsView extends StatefulWidget {
-  const ExplorationsView({super.key});
+  final Function onPermissionCompleted;
+
+  const ExplorationsView({super.key, required this.onPermissionCompleted});
 
   @override
   State<ExplorationsView> createState() => ExplorationsViewState();
@@ -22,6 +25,7 @@ class ExplorationsViewState extends State<ExplorationsView> {
   void initState() {
     super.initState();
     reloadExplorations(Service.fetchExplorations());
+    requestNotificationPermission();
   }
 
   void reloadExplorations(Future<List<Exploration>> newExplorations) {
@@ -44,6 +48,16 @@ class ExplorationsViewState extends State<ExplorationsView> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+    }
+  }
+
+  Future<void> requestNotificationPermission() async {
+    var status = await Permission.notification.status;
+    if (status.isDenied) {
+      var status = await Permission.notification.request();
+      if (status.isPermanentlyDenied || status.isGranted) {
+        widget.onPermissionCompleted();
+      }
     }
   }
 

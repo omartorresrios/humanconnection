@@ -1,17 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:humanconnection/auth_manager.dart';
 import 'package:humanconnection/custom_views/my_profile_view.dart';
 import '../models/user.dart';
 
 class NavigationBarView extends StatelessWidget implements PreferredSizeWidget {
   final UserData user;
   const NavigationBarView({super.key, required this.user});
-
-  Future signOut() async {
-    AuthManager().signOut();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +16,8 @@ class NavigationBarView extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         forceMaterialTransparency: true,
         title: const Text("Explorations"),
-        leading: Image.asset('lib/assets/network.png'),
+        // leading: Image.asset('lib/assets/network.png'),
         actions: [
-          IconButton(onPressed: signOut, icon: const Icon(Icons.logout)),
           GestureDetector(
             onTap: () {
               HapticFeedback.heavyImpact();

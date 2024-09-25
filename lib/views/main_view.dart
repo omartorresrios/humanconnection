@@ -8,6 +8,7 @@ import '../models/exploration.dart';
 import '../models/user.dart';
 import 'connect_view.dart';
 import 'explorations_view.dart';
+import 'settings_view.dart';
 
 class MainView extends StatefulWidget {
   final explorationList = Exploration.explorationList();
@@ -19,10 +20,38 @@ class MainView extends StatefulWidget {
   State<MainView> createState() => _MainViewState();
 }
 
-class _MainViewState extends State<MainView> {
+class _MainViewState extends State<MainView> with WidgetsBindingObserver {
   final GlobalKey<ExplorationsViewState> explorationsKey =
       GlobalKey<ExplorationsViewState>();
+  final GlobalKey<SettingsViewState> settingsKey =
+      GlobalKey<SettingsViewState>();
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void updateSettingsNotificationStatus() {
+    settingsKey.currentState?.updateNotificationStatus();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      print('App is in the foreground');
+      updateSettingsNotificationStatus();
+    } else if (state == AppLifecycleState.paused) {
+      print('App is in the background');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +64,13 @@ class _MainViewState extends State<MainView> {
           child: IndexedStack(
             index: selectedIndex,
             children: [
-              ExplorationsView(key: explorationsKey),
+              ExplorationsView(
+                  key: explorationsKey,
+                  onPermissionCompleted: () {
+                    updateSettingsNotificationStatus();
+                  }),
               const ConnectView(),
+              SettingsView(key: settingsKey)
             ],
           ),
         ),
@@ -83,6 +117,10 @@ class _MainViewState extends State<MainView> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.chat),
                 label: "Connect",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: "Settings",
               ),
             ],
           ),

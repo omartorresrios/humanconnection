@@ -1,7 +1,14 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:humanconnection/auth_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+enum NotificationStatus {
+  enabled,
+  disabled,
+}
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -11,7 +18,7 @@ class SettingsView extends StatefulWidget {
 }
 
 class SettingsViewState extends State<SettingsView> {
-  String notificationStatus = 'Unknown';
+  NotificationStatus notificationStatus = NotificationStatus.disabled;
 
   @override
   void initState() {
@@ -27,12 +34,28 @@ class SettingsViewState extends State<SettingsView> {
     var status = await Permission.notification.status;
     setState(() {
       if (status.isGranted) {
-        notificationStatus = "Enabled";
+        notificationStatus = NotificationStatus.enabled;
       } else if (status.isPermanentlyDenied) {
-        notificationStatus = "Disabled";
+        notificationStatus = NotificationStatus.disabled;
       }
     });
   }
+
+  Future<void> sendEmail() async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'torresomar44@gmail.com',
+      query: Uri.encodeFull('Subject=HumanConnection feedback&body='),
+    );
+
+    if (await canLaunchUrl(emailLaunchUri)) {
+      await launchUrl(emailLaunchUri);
+    } else {
+      throw 'Could not launch $emailLaunchUri';
+    }
+  }
+
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +78,7 @@ class SettingsViewState extends State<SettingsView> {
                 ),
                 onPressed: () {
                   HapticFeedback.heavyImpact();
+                  sendEmail();
                 },
                 child: const Text('Email'),
               ),
@@ -86,7 +110,7 @@ class SettingsViewState extends State<SettingsView> {
                   ),
                   const Spacer(),
                   Text(
-                    notificationStatus,
+                    capitalize(notificationStatus.toString().split('.').last),
                     style: TextStyle(
                       fontSize: 17,
                       color: Colors.black.withOpacity(0.5),
@@ -95,6 +119,21 @@ class SettingsViewState extends State<SettingsView> {
                 ],
               ),
             ),
+            if (notificationStatus == NotificationStatus.disabled)
+              TextButton(
+                style: TextButton.styleFrom(
+                  overlayColor: Color.fromARGB(0, 40, 107, 183),
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: () {
+                  HapticFeedback.heavyImpact();
+                  AppSettings.openAppSettings();
+                },
+                child: const Text('Cancel'),
+              ),
+            const SizedBox(height: 20),
             Text("Account"),
             Container(
               width: double.infinity,

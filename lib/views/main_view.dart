@@ -43,11 +43,16 @@ class _MainViewState extends State<MainView> with WidgetsBindingObserver {
     settingsKey.currentState?.updateNotificationStatus();
   }
 
+  void updateSettingsLocationStatus() {
+    settingsKey.currentState?.updateLocationStatus();
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       print('App is in the foreground');
       updateSettingsNotificationStatus();
+      updateSettingsLocationStatus();
     } else if (state == AppLifecycleState.paused) {
       print('App is in the background');
     }

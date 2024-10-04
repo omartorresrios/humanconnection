@@ -6,13 +6,18 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'helpers/service.dart';
 
 class AuthManager {
+  static UserData? _currentUser;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   static final userIsLoggedInController =
       StreamController<UserData?>.broadcast();
   static Stream<UserData?> get userIsLoggedIn =>
       userIsLoggedInController.stream;
 
-  signIn() async {
+  static Future<UserData?> getCurrentUser() async {
+    return _currentUser;
+  }
+
+  signIn(Function(bool) onComplete) async {
     try {
       final GoogleSignInAccount? user = await GoogleSignIn().signIn();
       if (user == null) {
@@ -27,6 +32,8 @@ class AuthManager {
       await _firebaseAuth.signInWithCredential(credential);
       await Service.validateToken(auth.idToken!, (UserData? currentUser) {
         userIsLoggedInController.add(currentUser);
+        _currentUser = currentUser;
+        onComplete(true);
         setupFirebaseMessaging(auth.idToken!);
       });
     } catch (e) {
@@ -40,10 +47,6 @@ class AuthManager {
     if (fcmToken != null) {
       await Service.saveFCMToken(fcmToken);
     }
-  }
-
-  User? getCurrentUser() {
-    return _firebaseAuth.currentUser;
   }
 
   signOut() async {

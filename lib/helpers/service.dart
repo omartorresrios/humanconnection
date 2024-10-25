@@ -5,10 +5,11 @@ import '../models/user.dart';
 
 class Service {
   static String currentUserAuthToken = "";
+  static const baseUrl = "http://MacBook-Air-6.local:3000/api";
 
   static Future<void> validateToken(
       String token, Function(UserData?) onComplete) async {
-    const url = 'http://192.168.1.86:3000/api/users/auth/login';
+    const url = '$baseUrl/users/auth/login';
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -30,7 +31,7 @@ class Service {
   }
 
   static Future<void> saveFCMToken(String fcmToken) async {
-    const url = 'http://192.168.1.86:3000/api/users/auth/save_fcm_token';
+    const url = '$baseUrl/users/auth/save_fcm_token';
     try {
       await http.post(Uri.parse(url), headers: {
         'Content-Type': 'application/json',
@@ -43,7 +44,7 @@ class Service {
   }
 
   static Future<void> signOutInBackend() async {
-    const url = 'http://192.168.1.86:3000/api/users/auth/logout';
+    const url = '$baseUrl/users/auth/logout';
     try {
       final response = await http.post(Uri.parse(url), headers: {
         'Content-Type': 'application/json',
@@ -58,7 +59,7 @@ class Service {
   }
 
   static Future<List<Exploration>> fetchExplorations() async {
-    const url = 'http://192.168.1.86:3000/api/all_explorations';
+    const url = '$baseUrl/all_explorations';
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $currentUserAuthToken',
@@ -72,7 +73,7 @@ class Service {
 
   static Future<void> createExploration(
       String text, List<String> sources, Function(bool) onComplete) async {
-    const url = 'http://192.168.1.86:3000/api/create_exploration';
+    const url = '$baseUrl/create_exploration';
     Map data = {
       'exploration': {'text': text, 'sources': sources}
     };
@@ -98,7 +99,7 @@ class Service {
   }
 
   static Future<void> updateProfile(String id, String city, String bio) async {
-    String url = 'http://192.168.1.86:3000/api/update_profile?id=$id';
+    String url = '$baseUrl/update_profile?id=$id';
     Map data = {
       'user': {'city': city, 'bio': bio}
     };
@@ -123,7 +124,7 @@ class Service {
 
   static Future<void> updateExploration(String id, String text,
       List<String> sources, Function(bool) onComplete) async {
-    String url = 'http://192.168.1.86:3000/api/update_exploration?id=$id';
+    String url = '$baseUrl/update_exploration?id=$id';
     Map data = {
       'exploration': {'text': text, 'sources': sources}
     };
@@ -150,7 +151,7 @@ class Service {
 
   static Future<void> markAllNotificationsAsRead(
       Function(bool) onComplete) async {
-    const url = 'http://192.168.1.86:3000/api/mark_all_notifications_as_read';
+    const url = '$baseUrl/mark_all_notifications_as_read';
     try {
       final response = await http.post(Uri.parse(url), headers: {
         'Content-Type': 'application/json',
@@ -168,7 +169,7 @@ class Service {
   }
 
   static Future<void> deleteAccountInBackend() async {
-    const url = 'http://192.168.1.86:3000/api/users/auth/delete';
+    const url = '$baseUrl/users/auth/delete';
     try {
       final response = await http.post(Uri.parse(url), headers: {
         'Content-Type': 'application/json',

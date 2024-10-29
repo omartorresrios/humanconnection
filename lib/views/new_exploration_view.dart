@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../helpers/loader.dart';
 import '../helpers/service.dart';
 
 class NewExplorationView extends StatefulWidget {
@@ -13,6 +14,7 @@ class _NewExplorationViewState extends State<NewExplorationView> {
   final explorationTextEditing = TextEditingController();
   final List<TextEditingController> sourceControllers = [];
   final explorationTextFocusNode = FocusNode();
+  final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   bool isButtonActive = false;
 
   @override
@@ -45,78 +47,91 @@ class _NewExplorationViewState extends State<NewExplorationView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                        onTap: () {
-                          HapticFeedback.heavyImpact();
-                          Navigator.pop(context, 'nothing');
-                        },
-                        child: const Text("Cancel")),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: isButtonActive
-                          ? () async {
-                              HapticFeedback.heavyImpact();
-                              await Service.createExploration(
-                                  explorationTextEditing.text,
-                                  sourceControllers
-                                      .map((source) => source.text)
-                                      .toList(), (bool onCompleted) {
-                                if (context.mounted) {
-                                  Navigator.pop(context, 'success');
-                                }
-                              });
-                            }
-                          : null,
-                      child: const Text('Create'),
-                    )
-                  ],
+    return Stack(children: [
+      Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            HapticFeedback.heavyImpact();
+                            Navigator.pop(context, 'nothing');
+                          },
+                          child: const Text("Cancel")),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: isButtonActive
+                            ? () async {
+                                FocusScope.of(context).unfocus();
+                                HapticFeedback.heavyImpact();
+                                isLoading.value = true;
+                                await Service.createExploration(
+                                    explorationTextEditing.text,
+                                    sourceControllers
+                                        .map((source) => source.text)
+                                        .toList(), (bool onCompleted) {
+                                  if (context.mounted) {
+                                    Navigator.pop(context, 'success');
+                                    isLoading.value = false;
+                                  }
+                                });
+                              }
+                            : null,
+                        child: const Text('Create'),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16),
-                child: TextField(
-                  focusNode: explorationTextFocusNode,
-                  controller: explorationTextEditing,
-                  decoration: const InputDecoration(
-                      hintText: "New exploration",
-                      border: InputBorder.none,
-                      fillColor: Colors.transparent),
-                  minLines: 1,
-                  maxLines: 8,
-                  onTap: () {},
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: TextField(
+                    focusNode: explorationTextFocusNode,
+                    controller: explorationTextEditing,
+                    decoration: const InputDecoration(
+                        hintText: "New exploration",
+                        border: InputBorder.none,
+                        fillColor: Colors.transparent),
+                    minLines: 1,
+                    maxLines: 8,
+                    onTap: () {},
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Divider(
-                height: 1,
-                color: Color.fromARGB(61, 78, 78, 78),
-              ),
-              const SizedBox(height: 20),
-              const Padding(
-                padding: EdgeInsets.only(left: 16, right: 16),
-                child: Text("Sources"),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16),
-                child: sourceTextFields(),
-              ),
-            ],
+                const SizedBox(height: 20),
+                const Divider(
+                  height: 1,
+                  color: Color.fromARGB(61, 78, 78, 78),
+                ),
+                const SizedBox(height: 20),
+                const Padding(
+                  padding: EdgeInsets.only(left: 16, right: 16),
+                  child: Text("Sources"),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: sourceTextFields(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    );
+      ValueListenableBuilder<bool>(
+        valueListenable: isLoading,
+        builder: (context, isLoadingValue, child) {
+          return isLoadingValue
+              ? const Center(child: Loader())
+              : const SizedBox.shrink();
+        },
+      ),
+    ]);
   }
 
   Widget sourceTextFields() {

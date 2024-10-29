@@ -4,6 +4,7 @@ import 'package:humanconnection/helpers/notification_provider.dart';
 import 'package:humanconnection/helpers/notification_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import '../helpers/loader.dart';
 import '../helpers/service.dart';
 import '../models/exploration.dart';
 import 'exploration_details_view.dart';
@@ -69,7 +70,7 @@ class ExplorationsViewState extends State<ExplorationsView> {
         future: explorations,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: Loader());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {

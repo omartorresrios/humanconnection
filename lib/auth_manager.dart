@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
@@ -15,6 +17,10 @@ class AuthManager {
 
   static Future<UserData?> getCurrentUser() async {
     return _currentUser;
+  }
+
+  static setCurrentUser(UserData user) {
+    userIsLoggedInController.add(user);
   }
 
   signIn(Function(bool) onComplete) async {
@@ -43,10 +49,28 @@ class AuthManager {
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   void setupFirebaseMessaging(String currentUserToken) async {
-    String? fcmToken = await messaging.getToken();
-    if (fcmToken != null) {
-      await Service.saveFCMToken(fcmToken);
+    try {
+      /// Remove this conditional. Only useful when testing with simulators
+      if (!await isSimulator()) {
+        String? fcmToken = await FirebaseMessaging.instance.getToken();
+        if (fcmToken != null) {
+          await Service.saveFCMToken(fcmToken);
+        }
+      } else {
+        print('Running on iOS simulator. Skipping FCM token retrieval.');
+      }
+    } catch (e) {
+      print('Error retrieving FCM token: $e');
     }
+  }
+
+  Future<bool> isSimulator() async {
+    if (Platform.isIOS) {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      return !iosInfo.isPhysicalDevice;
+    }
+    return false;
   }
 
   signOut() async {

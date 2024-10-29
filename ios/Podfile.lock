@@ -7,6 +7,8 @@ PODS:
   - AppAuth/Core (1.7.5)
   - AppAuth/ExternalUserAgent (1.7.5):
     - AppAuth/Core
+  - device_info_plus (0.0.1):
+    - Flutter
   - Firebase/Auth (11.0.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 11.0.0)
@@ -136,6 +138,7 @@ PODS:
 
 DEPENDENCIES:
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
+  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -175,6 +178,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   app_settings:
     :path: ".symlinks/plugins/app_settings/ios"
+  device_info_plus:
+    :path: ".symlinks/plugins/device_info_plus/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
@@ -205,6 +210,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   app_settings: 017320c6a680cdc94c799949d95b84cb69389ebc
   AppAuth: 501c04eda8a8d11f179dbe8637b7a91bb7e5d2fa
+  device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
   Firebase: 9f574c08c2396885b5e7e100ed4293d956218af9
   firebase_auth: f27287630c4d9e2c3c63e64d9240822ad6b07e5b
   firebase_core: 2ec6b789859c7c24766344ec71fdf78639402d56

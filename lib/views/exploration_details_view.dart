@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:humanconnection/helpers/notification_service.dart';
 import 'package:humanconnection/views/explorer_details_view.dart';
+import '../helpers/loader.dart';
 import '../helpers/service.dart';
 import '../models/exploration.dart';
 import '../models/source.dart';
@@ -20,8 +21,9 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
   final explorationTextController = TextEditingController();
   final List<TextEditingController> sourceControllers = [];
   final ValueNotifier<bool> hasExplorationChanged = ValueNotifier<bool>(false);
-  String explorationText = "";
+  final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   final List<String> sourceTexts = [];
+  String explorationText = "";
   bool explorationUpdated = false;
 
   @override
@@ -93,19 +95,29 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
-            child: appBar(context),
-          ),
-          const SizedBox(height: 20),
-          exploration(context),
-        ],
+    return Stack(children: [
+      Scaffold(
+          body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
+              child: appBar(context),
+            ),
+            const SizedBox(height: 20),
+            exploration(context),
+          ],
+        ),
+      )),
+      ValueListenableBuilder<bool>(
+        valueListenable: isLoading,
+        builder: (context, isLoadingValue, child) {
+          return isLoadingValue
+              ? const Center(child: Loader())
+              : const SizedBox.shrink();
+        },
       ),
-    ));
+    ]);
   }
 
   Expanded exploration(BuildContext context) {
@@ -173,6 +185,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                     ),
                     onPressed: () async {
                       HapticFeedback.heavyImpact();
+                      isLoading.value = true;
                       await Service.updateExploration(
                           widget.exploration.id,
                           explorationTextController.text,
@@ -182,6 +195,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                         setState(() {
                           explorationUpdated = explorationWasUpdated;
                         });
+                        isLoading.value = false;
                       });
                     },
                     child: const Text('Save'),
@@ -254,17 +268,20 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                     fullscreenDialog: true));
           },
           child: Row(children: [
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(
-                      explorations[index].user.picture),
-                  fit: BoxFit.cover,
+            CachedNetworkImage(
+              imageUrl: explorations[index].user.picture,
+              imageBuilder: (context, imageProvider) => Container(
+                width: 40.0,
+                height: 40.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
+              errorWidget: (context, url, error) => Text("error: $error"),
             ),
             const SizedBox(width: 8),
             Text(explorations[index].user.fullname)

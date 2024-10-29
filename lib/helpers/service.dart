@@ -60,14 +60,22 @@ class Service {
 
   static Future<List<Exploration>> fetchExplorations() async {
     const url = '$baseUrl/all_explorations';
-    final response = await http.get(Uri.parse(url), headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $currentUserAuthToken',
-    });
-    if (response.statusCode == 200) {
-      return parseExplorations(response.body);
-    } else {
-      throw Exception('Failed to load explorations');
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $currentUserAuthToken',
+        },
+      );
+      if (response.statusCode == 200) {
+        return parseExplorations(response.body);
+      } else {
+        throw Exception('Failed to load explorations: ${response.statusCode}');
+      }
+    } catch (e) {
+      print("Error fetching explorations: $e");
+      rethrow;
     }
   }
 
@@ -91,10 +99,12 @@ class Service {
       } else {
         onComplete(false);
         print("Request failed with status: ${response.statusCode}");
+        throw Exception('Failed to create exploration: ${response.statusCode}');
       }
     } catch (e) {
       onComplete(false);
       print("Request error: $e");
+      rethrow;
     }
   }
 
@@ -113,12 +123,14 @@ class Service {
         body: jsonEncode(data),
       );
       if (response.statusCode == 200) {
-        print('maybe a loader to be hide here');
       } else {
-        throw Exception('Failed to update profile');
+        print('Failed to update profile. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to update profile: ${response.statusCode}');
       }
     } catch (e) {
       print('There was an error when updating the profile: $e');
+      rethrow;
     }
   }
 
@@ -133,7 +145,7 @@ class Service {
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          'Authorization': 'Bearer $currentUserAuthToken',
         },
         body: jsonEncode(data),
       );

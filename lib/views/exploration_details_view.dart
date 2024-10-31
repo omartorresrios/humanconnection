@@ -9,9 +9,10 @@ import '../models/source.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ExplorationDetailsView extends StatefulWidget {
-  final Exploration exploration;
+  final ExplorationWithSimilar explorationWithSimilar;
 
-  const ExplorationDetailsView({super.key, required this.exploration});
+  const ExplorationDetailsView(
+      {super.key, required this.explorationWithSimilar});
 
   @override
   State<ExplorationDetailsView> createState() => _ExplorationDetailsViewState();
@@ -30,18 +31,19 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
   void initState() {
     super.initState();
     setExploration();
+    markAllNotificationsAsRead();
     setSources();
     setupListeners();
-    markAllNotificationsAsRead();
   }
 
   void setExploration() {
-    explorationTextController.text = widget.exploration.text;
-    explorationText = widget.exploration.text;
+    explorationTextController.text =
+        widget.explorationWithSimilar.exploration.text;
+    explorationText = widget.explorationWithSimilar.exploration.text;
   }
 
   void setSources() {
-    for (Source source in widget.exploration.sources) {
+    for (Source source in widget.explorationWithSimilar.exploration.sources) {
       sourceControllers.add(TextEditingController(text: source.text));
       sourceTexts.add(source.text);
     }
@@ -55,12 +57,12 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
   }
 
   void markAllNotificationsAsRead() async {
-    if (widget.exploration.notificationCount != null &&
-        widget.exploration.notificationCount! > 0) {
+    if (widget.explorationWithSimilar.exploration.notificationCount != null &&
+        widget.explorationWithSimilar.exploration.notificationCount! > 0) {
       await Service.markAllNotificationsAsRead((bool markingCompleted) {
         if (markingCompleted == true) {
-          NotificationService()
-              .addNotificationToExploration(widget.exploration.id, 0);
+          NotificationService().addNotificationToExploration(
+              widget.explorationWithSimilar.exploration.id, 0);
         }
       });
     }
@@ -154,8 +156,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
             ),
             const SizedBox(height: 20),
             sourceTextFields(),
-            if (widget.exploration.sharedExplorations.isNotEmpty)
-              connectionsSection()
+            connectionsSection()
           ],
         ),
       ),
@@ -187,7 +188,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                       HapticFeedback.heavyImpact();
                       isLoading.value = true;
                       await Service.updateExploration(
-                          widget.exploration.id,
+                          widget.explorationWithSimilar.exploration.id,
                           explorationTextController.text,
                           sourceControllers
                               .map((source) => source.text)
@@ -200,7 +201,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
                     },
                     child: const Text('Save'),
                   )
-                : const SizedBox.shrink(); // Hide the button if not visible
+                : const SizedBox.shrink();
           },
         ),
       ],
@@ -216,7 +217,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
           const SizedBox(height: 20),
           const Text("Connections"),
           const SizedBox(height: 20),
-          explorerList(widget.exploration.sharedExplorations),
+          explorerList(widget.explorationWithSimilar.similarExplorations)
         ],
       ),
     );
@@ -227,7 +228,7 @@ class _ExplorationDetailsViewState extends State<ExplorationDetailsView> {
       padding: const EdgeInsets.all(0.0),
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: widget.exploration.sources.length,
+      itemCount: widget.explorationWithSimilar.exploration.sources.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),

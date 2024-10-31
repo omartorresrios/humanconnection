@@ -20,25 +20,26 @@ class ExplorationsView extends StatefulWidget {
 }
 
 class ExplorationsViewState extends State<ExplorationsView> {
-  late Future<List<Exploration>> explorations;
+  late Future<List<ExplorationWithSimilar>> explorationsWithSimilar;
 
   @override
   void initState() {
     super.initState();
-    reloadExplorations(Service.fetchExplorations());
+    reloadExplorations(Service.fetchExplorationsWithSimilar());
     requestNotificationPermission();
   }
 
-  void reloadExplorations(Future<List<Exploration>> newExplorations) {
+  void reloadExplorations(
+      Future<List<ExplorationWithSimilar>> newExplorations) {
     setState(() {
-      explorations = newExplorations;
+      explorationsWithSimilar = newExplorations;
     });
   }
 
   void fetchNewExplorations(String result) async {
     if (result == 'success') {
       setState(() {
-        reloadExplorations(Service.fetchExplorations());
+        reloadExplorations(Service.fetchExplorationsWithSimilar());
       });
       Fluttertoast.showToast(
         msg: "Your exploration has been created!",
@@ -66,8 +67,8 @@ class ExplorationsViewState extends State<ExplorationsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 247, 247, 247),
-      body: FutureBuilder<List<Exploration>>(
-        future: explorations,
+      body: FutureBuilder<List<ExplorationWithSimilar>>(
+        future: explorationsWithSimilar,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: Loader());
@@ -92,22 +93,24 @@ class ExplorationsViewState extends State<ExplorationsView> {
     return Consumer<NotificationProvider>(
       builder: (context, provider, child) {
         return ListView.builder(
-          itemCount: provider.explorations.length,
+          itemCount: provider.explorationsWithSimilar.length,
           itemBuilder: (context, index) {
             return ExplorationItemView(
-              exploration: provider.explorations[index],
+              explorationWithSimilar: provider.explorationsWithSimilar[index],
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => ExplorationDetailsView(
-                      exploration: provider.explorations[index],
+                      explorationWithSimilar:
+                          provider.explorationsWithSimilar[index],
                     ),
                   ),
                 ).then((explorationUpdated) {
                   if (explorationUpdated == true) {
                     setState(() {
-                      reloadExplorations(Service.fetchExplorations());
+                      reloadExplorations(
+                          Service.fetchExplorationsWithSimilar());
                     });
                   }
                 });

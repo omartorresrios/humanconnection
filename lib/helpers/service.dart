@@ -58,8 +58,34 @@ class Service {
     }
   }
 
-  static Future<List<Exploration>> fetchExplorations() async {
-    const url = '$baseUrl/all_explorations';
+  static Future<List<ExplorationWithSimilar>>
+      fetchExplorationsWithSimilar() async {
+    const url = '$baseUrl/all_explorations_with_similar';
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $currentUserAuthToken',
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> jsonList = json.decode(response.body);
+        return jsonList
+            .map((json) => ExplorationWithSimilar.fromJson(json))
+            .toList();
+      } else {
+        throw Exception('Failed to load explorations: ${response.statusCode}');
+      }
+    } catch (e) {
+      print("Error fetching explorations: $e");
+      rethrow;
+    }
+  }
+
+  static Future<List<Exploration>> fetchSimilarExplorationsFor(
+      String id) async {
+    final url = '$baseUrl/similar_explorations?id=$id';
     try {
       final response = await http.get(
         Uri.parse(url),
@@ -71,7 +97,8 @@ class Service {
       if (response.statusCode == 200) {
         return parseExplorations(response.body);
       } else {
-        throw Exception('Failed to load explorations: ${response.statusCode}');
+        throw Exception(
+            'Failed to load similar explorations: ${response.statusCode}');
       }
     } catch (e) {
       print("Error fetching explorations: $e");

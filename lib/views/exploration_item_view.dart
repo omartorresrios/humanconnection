@@ -3,11 +3,11 @@ import '../models/exploration.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ExplorationItemView extends StatelessWidget {
-  final Exploration exploration;
+  final ExplorationWithSimilar explorationWithSimilar;
   final void Function() onTap;
 
   const ExplorationItemView(
-      {super.key, required this.exploration, required this.onTap});
+      {super.key, required this.explorationWithSimilar, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -28,26 +28,32 @@ class ExplorationItemView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(exploration.text,
+                    Text(explorationWithSimilar.exploration.text,
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     SizedBox(
-                        height: exploration.sharedExplorations.isEmpty ? 0 : 8),
-                    if (exploration.sharedExplorations.isNotEmpty)
+                        height:
+                            explorationWithSimilar.similarExplorations.isEmpty
+                                ? 0
+                                : 8),
+                    if (explorationWithSimilar.similarExplorations.isNotEmpty)
                       ExplorerList(
-                          explorerProfilePictureUrls: exploration
-                              .sharedExplorations
+                          explorerProfilePictureUrls: explorationWithSimilar
+                              .similarExplorations
                               .map((e) => e.user.picture)
                               .toList()),
                   ],
                 ),
               ),
               const SizedBox(width: 20),
-              if (exploration.notificationCount != null &&
-                  exploration.notificationCount! > 0)
-                CircleAvatar(child: Text('${exploration.notificationCount}'))
+              if (explorationWithSimilar.exploration.notificationCount !=
+                      null &&
+                  explorationWithSimilar.exploration.notificationCount! > 0)
+                CircleAvatar(
+                    child: Text(
+                        '${explorationWithSimilar.exploration.notificationCount}'))
             ],
           ),
         ),

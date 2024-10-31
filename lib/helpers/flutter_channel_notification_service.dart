@@ -27,14 +27,15 @@ class FlutterChannelNotificationService {
           matchedExplorationId =
               convertMatchedExplorationId(matchedExplorationId);
           final provider = NotificationService().provider;
-          Exploration? exploration = provider.explorations.firstWhere(
-            (exp) => exp.id == matchedExplorationId,
+          ExplorationWithSimilar? explorationWithSimilar =
+              provider.explorationsWithSimilar.firstWhere(
+            (exp) => exp.exploration.id == matchedExplorationId,
             orElse: () => throw Exception('Failed to find exploration'),
           );
           _navigatorKey?.currentState?.push(
             MaterialPageRoute(
-              builder: (context) =>
-                  ExplorationDetailsView(exploration: exploration),
+              builder: (context) => ExplorationDetailsView(
+                  explorationWithSimilar: explorationWithSimilar),
             ),
           );
         } catch (e) {

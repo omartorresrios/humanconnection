@@ -4,14 +4,12 @@ import 'package:humanconnection/views/new_exploration_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../custom_views/navigation_bar_view.dart';
 import '../helpers/service.dart';
-import '../models/exploration.dart';
 import '../models/user.dart';
 import 'connect_view.dart';
 import 'explorations_view.dart';
 import 'settings_view.dart';
 
 class MainView extends StatefulWidget {
-  final explorationList = Exploration.explorationList();
   final UserData user;
 
   MainView({super.key, required this.user});
@@ -134,7 +132,7 @@ class _MainViewState extends State<MainView> with WidgetsBindingObserver {
 
   void fetchAndReloadExplorations() {
     explorationsKey.currentState
-        ?.reloadExplorations(Service.fetchExplorations());
+        ?.reloadExplorations(Service.fetchExplorationsWithSimilar());
   }
 
   void showToast() {
